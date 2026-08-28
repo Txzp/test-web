@@ -3,453 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para la señora Penny</title>
+    <title>Sorpresa para Angel</title>
     <style>
         /* ===== ESTILOS GLOBALES ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         body {
-            min-height: 100vh;
             background: #000000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Arial Black', 'Helvetica', sans-serif;
+            color: #ffffff;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
             overflow: hidden;
-            cursor: pointer;
-            color: #ffffff;
-            perspective: 1000px; /* Necesario para el 3D */
-        }
-
-        /* ===== FONDO DE PARTÍCULAS MÁS BLANCAS ===== */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ===== CONTENEDORES CON EFECTO GLASS ===== */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 40px 60px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05);
-            z-index: 10;
-            text-align: center;
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* ===== TEXTO INICIAL ===== */
-        #title-initial {
-            position: absolute;
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            font-weight: 900;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
-            animation: float 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        #title-initial.hidden {
-            opacity: 0;
-            transform: translateY(-50px) scale(0.8);
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* ===== CONTADOR DE CLICS (GLASS) ===== */
-        #click-counter {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffffff;
-            font-size: 1.2rem;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
-            z-index: 20;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px 30px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: none;
-            pointer-events: none;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-
-        #click-counter.visible {
-            display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        /* ===== CORAZÓN 3D MULTILÍNEA ELÉCTRICO ===== */
-        #heart-container {
-            position: absolute;
-            z-index: 10;
-            width: 400px;
-            height: 400px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-        }
-
-        #heart-container.visible {
+            width: 100vw;
+            height: 100vh;
             display: flex;
-        }
-
-        #heart-3d-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            animation: spin3D 10s linear infinite;
-        }
-
-        @keyframes spin3D {
-            0% { transform: rotateY(0deg) rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(10deg); }
-        }
-
-        .wire-heart {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: #ffffff;
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
-        }
-
-        .heart-path {
-            transition: stroke-dashoffset 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        /* ===== PARTÍCULAS DE EXPLOSIÓN ===== */
-        .particle {
-            position: fixed;
-            background: #ffffff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 100;
-            box-shadow: 0 0 10px #ffffff, 0 0 25px #ffffff;
-            animation: particleFly 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        @keyframes particleFly {
-            0% { opacity: 1; transform: translate(0, 0) scale(1); }
-            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
-        }
-
-        /* ===== TEXTO CAYENDO FINAL ===== */
-        #final-text-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
-            display: none;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
-            transition: opacity 1.5s ease;
+            position: relative;
         }
 
-        #final-text-container.fade-out {
-            opacity: 0;
-        }
-
-        .falling-text {
-            font-size: clamp(2.5rem, 8vw, 6rem);
-            font-weight: 900;
-            text-align: center;
-            text-shadow: 0 0 20px #ffffff, 0 0 50px rgba(255,255,255,0.7);
-            animation: dropDown 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            opacity: 0;
-            padding: 20px;
-        }
-
-        @keyframes dropDown {
-            0% { transform: translateY(-100vh) scale(0.8); opacity: 0; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
-        }
-
-        /* ===== SISTEMA DE RATING (GLASS) ===== */
-        #rating-screen {
-            position: fixed;
-            z-index: 300;
-            display: none;
+        /* ===== FASES (CONTENEDORES) ===== */
+        .phase {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            transition: opacity 0.8s ease;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .phase.active {
+            opacity: 1;
             pointer-events: auto;
         }
 
-        #rating-screen.visible {
+        /* ===== FASE 1: INICIO ===== */
+        #title-angel {
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: 900;
             display: flex;
-            opacity: 1;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        #title-angel span {
+            color: #4a4a4a; /* Gris oscuro */
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        #btn-entrar {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+        #btn-entrar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 123, 255, 0.8);
         }
 
-        .rating-title {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-shadow: 0 0 15px rgba(255,255,255,0.8);
+        /* ===== FASE 2: EL JARDÍN Y FUEGOS ARTIFICIALES ===== */
+        #canvas-fireworks {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+        #garden-container {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 5;
+        }
+        /* Texto flotante en el jardín */
+        .click-anywhere {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
-        .stars-container {
+        /* Flores y Plantas SVG */
+        .plant {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            transform: scale(0);
+        }
+        /* Animación de crecimiento */
+        .grow { animation: growUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes growUp {
+            0% { transform: scale(0) translateY(50px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+        /* Animación de viento */
+        .sway { animation: swayWind var(--speed) ease-in-out infinite alternate; }
+        @keyframes swayWind {
+            0% { transform: scale(1) rotate(-8deg); }
+            100% { transform: scale(1) rotate(8deg); }
+        }
+
+        /* ===== FASE 3: LA PREGUNTA ===== */
+        .question-text {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 50px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+        .buttons-container {
+            position: relative;
+            width: 300px;
+            height: 100px;
             display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 20px;
         }
-
-        .star {
-            font-size: 4rem;
-            color: rgba(255, 255, 255, 0.1);
+        .btn-answer {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+        #btn-yes:hover {
+            background: #e0e0e0;
+            box-shadow: 0 0 25px rgba(255,255,255,0.6);
+        }
+        #btn-no {
+            position: absolute;
+            transition: all 0.2s ease;
         }
 
-        .star:hover, .star.active {
-            color: #ffffff;
-            text-shadow: 0 0 20px #ffffff, 0 0 40px #ffffff;
-            -webkit-text-stroke: 0px;
-            transform: scale(1.2);
+        /* ===== EXPLOSIÓN DEL CORAZÓN (FINAL) ===== */
+        #final-heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            fill: #ff3366;
+            display: none;
+            z-index: 100;
+            filter: drop-shadow(0 0 20px #ff3366);
+        }
+        .explode-heart {
+            display: block !important;
+            animation: heartExplode 1.5s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+        }
+        @keyframes heartExplode {
+            0% { transform: scale(1); opacity: 1; }
+            70% { transform: scale(50); opacity: 1; }
+            100% { transform: scale(60); opacity: 0; }
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            #heart-container { width: 300px; height: 300px; }
-            .glass-panel { padding: 30px 20px; width: 90%; }
-            .star { font-size: 3rem; gap: 10px; }
-        }
     </style>
 </head>
 <body>
 
-    <canvas id="particles-canvas"></canvas>
-
-    <div id="title-initial" class="glass-panel">
-        CLICK PARA LA SORPRESA
+    <div id="phase1" class="phase active">
+        <h1 id="title-angel">
+            <span>A</span><span>n</span><span>g</span><span>e</span><span>l</span>
+        </h1>
+        <p class="subtitle">hecho con amor</p>
+        <button id="btn-entrar">Entrar!</button>
     </div>
 
-    <div id="click-counter">🤍 <span id="click-count">0</span> / 10</div>
+    <div id="phase2" class="phase">
+        <canvas id="canvas-fireworks"></canvas>
+        <div id="garden-container">
+            <div class="click-anywhere">Toca cualquier parte para continuar...</div>
 
-    <div id="heart-container">
-        <div id="heart-3d-wrapper">
-            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(0deg)">
-                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            <svg class="plant" style="left: 10%; width: 60px; height: 80px; --speed: 3s; animation-delay: 0.1s;" viewBox="0 0 50 100">
+                <path d="M25,100 Q10,50 5,20 M25,100 Q20,60 15,30 M25,100 Q30,50 45,20 M25,100 Q35,60 40,35" stroke="#2e8b57" stroke-width="4" fill="none" stroke-linecap="round"/>
             </svg>
-            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(45deg)">
-                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            <svg class="plant" style="left: 35%; width: 50px; height: 70px; --speed: 2.5s; animation-delay: 0.3s;" viewBox="0 0 50 100">
+                <path d="M25,100 Q15,40 10,10 M25,100 Q25,50 30,20 M25,100 Q40,60 45,30" stroke="#228b22" stroke-width="4" fill="none" stroke-linecap="round"/>
             </svg>
-            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(90deg)">
-                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            <svg class="plant" style="left: 65%; width: 70px; height: 90px; --speed: 3.2s; animation-delay: 0.2s;" viewBox="0 0 50 100">
+                <path d="M25,100 Q10,50 5,20 M25,100 Q20,60 15,30 M25,100 Q30,50 45,20 M25,100 Q35,60 40,35" stroke="#2e8b57" stroke-width="4" fill="none" stroke-linecap="round"/>
             </svg>
-            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(135deg)">
-                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            <svg class="plant" style="left: 85%; width: 60px; height: 75px; --speed: 2.8s; animation-delay: 0.4s;" viewBox="0 0 50 100">
+                <path d="M25,100 Q15,40 10,10 M25,100 Q25,50 30,20 M25,100 Q40,60 45,30" stroke="#32cd32" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+
+            <svg class="plant" style="left: 20%; width: 120px; height: 250px; --speed: 4s; animation-delay: 0.5s;" viewBox="0 0 100 250">
+                <path d="M50,250 Q45,150 50,50" stroke="#228b22" stroke-width="6" fill="none"/>
+                <path d="M48,160 Q20,150 25,130 Q40,140 48,160" fill="#228b22"/>
+                <path d="M51,120 Q80,110 75,90 Q60,100 51,120" fill="#228b22"/>
+                <g transform="translate(50, 50)">
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(0)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(30)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(60)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(90)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(120)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(150)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(180)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(210)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(240)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(270)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(300)" />
+                    <ellipse cx="0" cy="-25" rx="8" ry="25" fill="#ffd700" transform="rotate(330)" />
+                    <circle cx="0" cy="0" r="18" fill="#5c3a21" />
+                    <circle cx="0" cy="0" r="14" fill="#3e2311" stroke="#2a1506" stroke-width="2" stroke-dasharray="2,2"/>
+                </g>
+            </svg>
+            
+            <svg class="plant" style="left: 75%; width: 100px; height: 220px; --speed: 3.5s; animation-delay: 0.8s;" viewBox="0 0 100 250">
+                <path d="M50,250 Q55,150 50,50" stroke="#32cd32" stroke-width="5" fill="none"/>
+                <path d="M48,150 Q15,140 20,110 Q35,130 48,150" fill="#32cd32"/>
+                <g transform="translate(50, 50)">
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(0)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(45)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(90)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(135)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(180)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(225)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(270)" />
+                    <ellipse cx="0" cy="-20" rx="7" ry="22" fill="#ffcc00" transform="rotate(315)" />
+                    <circle cx="0" cy="0" r="15" fill="#4a2e1b" />
+                </g>
+            </svg>
+
+            <svg class="plant" style="left: 45%; width: 70px; height: 180px; --speed: 4.5s; animation-delay: 1s;" viewBox="0 0 100 200">
+                <path d="M50,200 Q40,120 50,40" stroke="#00fa9a" stroke-width="4" fill="none"/>
+                <path d="M49,120 Q30,110 35,90 Q45,100 49,120" fill="#00fa9a"/>
+                <g transform="translate(50, 40)">
+                    <path d="M0,0 C-20,-20 -20,-40 0,-40 C20,-40 20,-20 0,0" fill="#ffb6c1"/>
+                    <path d="M-5,-5 C-30,0 -30,-20 0,-20" fill="#ff69b4"/>
+                    <path d="M5,-5 C30,0 30,-20 0,-20" fill="#ff69b4"/>
+                </g>
+            </svg>
+            <svg class="plant" style="left: 60%; width: 60px; height: 150px; --speed: 3.8s; animation-delay: 1.2s;" viewBox="0 0 100 200">
+                <path d="M50,200 Q60,120 50,40" stroke="#3cb371" stroke-width="3" fill="none"/>
+                <g transform="translate(50, 40)">
+                    <circle cx="-10" cy="-10" r="15" fill="#ffffff"/>
+                    <circle cx="10" cy="-10" r="15" fill="#ffffff"/>
+                    <circle cx="0" cy="5" r="15" fill="#ffffff"/>
+                    <circle cx="0" cy="-5" r="8" fill="#ffd700"/>
+                </g>
             </svg>
         </div>
     </div>
 
-    <div id="final-text-container">
-        <div class="falling-text">Para la señora<br>Penny</div>
-    </div>
-
-    <div id="rating-screen" class="glass-panel">
-        <div class="rating-title">¿Qué te pareció la sorpresa?</div>
-        <div class="stars-container">
-            <div class="star" data-value="1">★</div>
-            <div class="star" data-value="2">★</div>
-            <div class="star" data-value="3">★</div>
-            <div class="star" data-value="4">★</div>
-            <div class="star" data-value="5">★</div>
+    <div id="phase3" class="phase">
+        <div class="question-text">¿Te gustó? 🥺</div>
+        <div class="buttons-container" id="btns-container">
+            <button id="btn-yes" class="btn-answer">Sí</button>
+            <button id="btn-no" class="btn-answer" style="left: 170px;">No</button>
         </div>
+        
+        <svg id="final-heart" viewBox="0 0 200 200">
+            <path d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+        </svg>
     </div>
 
     <script>
-        // 1. SISTEMA DE PARTÍCULAS BLANCAS Y BRILLANTES
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const PARTICLE_COUNT = 100;
+        // ==== GESTIÓN DE FASES ====
+        const phase1 = document.getElementById('phase1');
+        const phase2 = document.getElementById('phase2');
+        const phase3 = document.getElementById('phase3');
+        
+        // Fase 1: Botón Entrar
+        const btnEntrar = document.getElementById('btn-entrar');
+        const letters = document.querySelectorAll('#title-angel span');
 
-        function resizeCanvas() {
+        btnEntrar.addEventListener('click', () => {
+            btnEntrar.style.pointerEvents = 'none'; // Evitar doble clic
+            
+            // Animación letra por letra
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.style.color = '#ffffff';
+                    letter.style.textShadow = '0 0 20px #ffffff, 0 0 40px rgba(255, 255, 255, 0.8)';
+                }, index * 300);
+            });
+
+            // Transición a la fase 2
+            setTimeout(() => {
+                phase1.classList.remove('active');
+                phase2.classList.add('active');
+                iniciarFase2();
+            }, letters.length * 300 + 800);
+        });
+
+        // Fase 2: Jardín
+        let isPhase2Active = false;
+        function iniciarFase2() {
+            isPhase2Active = true;
+            // Activar las animaciones de crecimiento y viento
+            const plants = document.querySelectorAll('.plant');
+            plants.forEach(plant => {
+                plant.classList.add('grow');
+                setTimeout(() => { plant.classList.add('sway'); }, 1500); // Aplicar viento después de crecer
+            });
+            loopFuegosArtificiales();
+        }
+
+        // Clic en el jardín para pasar a la fase 3
+        const garden = document.getElementById('garden-container');
+        garden.addEventListener('click', () => {
+            isPhase2Active = false; // Detiene la creación de nuevos fuegos
+            phase2.classList.remove('active');
+            phase3.classList.add('active');
+        });
+
+        // Fase 3: Los botones y el corazón
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+        const btnsContainer = document.getElementById('btns-container');
+        const questionText = document.querySelector('.question-text');
+        const finalHeart = document.getElementById('final-heart');
+
+        // Broma del botón No
+        function moverBotonNo() {
+            // Generar posición random dentro de la pantalla, evitando salir de los bordes
+            const maxX = window.innerWidth - btnNo.offsetWidth - 20;
+            const maxY = window.innerHeight - btnNo.offsetHeight - 20;
+            const randomX = Math.max(20, Math.random() * maxX);
+            const randomY = Math.max(20, Math.random() * maxY);
+            
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        btnNo.addEventListener('mouseover', moverBotonNo);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evitar toque móvil directo
+            moverBotonNo();
+        });
+
+        // Respuesta Sí
+        btnYes.addEventListener('click', () => {
+            // Ocultar textos y botones
+            questionText.style.display = 'none';
+            btnsContainer.style.display = 'none';
+            btnNo.style.display = 'none';
+            
+            // Explotar el corazón
+            finalHeart.classList.add('explode-heart');
+            
+            // Reiniciar página tras la explosión
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        });
+
+        // ==== LÓGICA DE FUEGOS ARTIFICIALES (CANVAS) ====
+        const canvas = document.getElementById('canvas-fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        });
 
-        class Particle {
-            constructor() { this.reset(); }
-            reset() {
+        let particles = [];
+        let fireworks = [];
+
+        function randomColor() {
+            const colors = ['#ff4d4d', '#4dff4d', '#4da6ff', '#ffff4d', '#ff4da6'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        class Firework {
+            constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2.5 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-                // Más blancas y opacas
-                this.opacity = Math.random() * 0.6 + 0.4;
+                this.y = canvas.height;
+                this.targetY = Math.random() * (canvas.height / 2) + 50;
+                this.speed = Math.random() * 3 + 4;
+                this.color = randomColor();
+                this.radius = 2;
+                this.exploded = false;
             }
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                this.y -= this.speed;
+                if (this.y <= this.targetY) {
+                    this.exploded = true;
+                    this.explode();
+                }
             }
             draw() {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.shadowColor = '#ffffff';
-                ctx.shadowBlur = 15;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
                 ctx.fill();
             }
+            explode() {
+                for (let i = 0; i < 40; i++) {
+                    particles.push(new Particle(this.x, this.y, this.color));
+                }
+            }
         }
 
-        for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // 2. LÓGICA PRINCIPAL Y CORAZÓN 3D
-        const titleElement = document.getElementById('title-initial');
-        const clickCounter = document.getElementById('click-counter');
-        const clickCountSpan = document.getElementById('click-count');
-        const heartContainer = document.getElementById('heart-container');
-        const heartPaths = document.querySelectorAll('.heart-path');
-        const finalTextContainer = document.getElementById('final-text-container');
-        const ratingScreen = document.getElementById('rating-screen');
-
-        let clickCount = 0;
-        const MAX_CLICKS = 10;
-        let isAnimating = false;
-
-        // Configurar todas las líneas del SVG para que empiecen ocultas
-        const pathLength = heartPaths[0].getTotalLength();
-        heartPaths.forEach(path => {
-            path.style.strokeDasharray = pathLength;
-            path.style.strokeDashoffset = pathLength;
-        });
-
-        function createExplosion(x, y) {
-            for (let i = 0; i < 70; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 250 + 80;
-                const size = Math.random() * 5 + 2;
-                
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1200);
+                const speed = Math.random() * 3 + 1;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.015;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.05; // Gravedad
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.globalAlpha = 1;
             }
         }
 
-        document.addEventListener('click', (e) => {
-            // Prevenir clics si ya terminó o si tocan las estrellas
-            if (isAnimating || clickCount >= MAX_CLICKS || e.target.classList.contains('star')) return;
-
-            if (clickCount === 0) {
-                titleElement.classList.add('hidden');
-                clickCounter.classList.add('visible');
-                heartContainer.classList.add('visible');
+        function loopFuegosArtificiales() {
+            if (!isPhase2Active) {
+                // Limpiar suavemente si cambia de fase
+                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                return;
             }
 
-            clickCount++;
-            clickCountSpan.textContent = clickCount;
+            requestAnimationFrame(loopFuegosArtificiales);
+            ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Efecto de estela
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar progresivamente todas las capas 3D
-            const progress = clickCount / MAX_CLICKS;
-            heartPaths.forEach(path => {
-                path.style.strokeDashoffset = pathLength - (pathLength * progress);
-            });
-
-            // Pequeña explosión de chispa en cada clic
-            const rect = heartContainer.getBoundingClientRect();
-            
-            if (clickCount >= MAX_CLICKS) {
-                isAnimating = true;
-                clickCounter.classList.remove('visible');
-
-                // Hacer brillar el corazón completo y explotarlo
-                setTimeout(() => {
-                    createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
-                    heartContainer.style.display = 'none';
-
-                    // Mostrar el texto final
-                    setTimeout(() => {
-                        finalTextContainer.style.display = 'flex';
-                        
-                        // Esperar 5 segundos, desvanecer y mostrar las estrellas
-                        setTimeout(() => {
-                            finalTextContainer.classList.add('fade-out');
-                            
-                            setTimeout(() => {
-                                finalTextContainer.style.display = 'none';
-                                ratingScreen.classList.add('visible');
-                            }, 1500); // tiempo de fade out
-
-                        }, 5000); // 5 segundos mostrado
-
-                    }, 600); // delay después de la explosión
-
-                }, 400); // pausa antes de explotar
+            // Probabilidad de lanzar un fuego artificial (no exagerado, normal)
+            if (Math.random() < 0.03) {
+                fireworks.push(new Firework());
             }
-        });
 
-        // 3. LÓGICA DE LAS ESTRELLAS
-        const stars = document.querySelectorAll('.star');
-        stars.forEach(star => {
-            star.addEventListener('click', (e) => {
-                const rating = parseInt(e.target.getAttribute('data-value'));
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-        });
+            // Actualizar y dibujar cohetes
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                fireworks[i].update();
+                fireworks[i].draw();
+                if (fireworks[i].exploded) fireworks.splice(i, 1);
+            }
+
+            // Actualizar y dibujar explosiones
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].alpha <= 0) particles.splice(i, 1);
+            }
+        }
     </script>
 </body>
 </html>
