@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorpresa para Angel</title>
+    <title>Sorpresa</title>
     <style>
         /* ===== ESTILOS GLOBALES ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -30,14 +30,10 @@
             align-items: center;
             transition: opacity 0.8s ease;
             opacity: 0;
-            pointer-events: none;
             z-index: 10;
         }
-        .phase.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
+        /* Para asegurar que no se crucen, las ocultaremos completamente con JS */
+        
         /* ===== FASE 1: INICIO ===== */
         #title-angel {
             font-size: clamp(4rem, 15vw, 8rem);
@@ -83,23 +79,8 @@
         #garden-container {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: auto;
-            cursor: pointer;
             z-index: 5;
-        }
-        /* Texto flotante en el jardín */
-        .click-anywhere {
-            position: absolute;
-            top: 20%;
-            width: 100%;
-            text-align: center;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.5);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
+            pointer-events: none; /* Todo es automático ahora */
         }
 
         /* Flores y Plantas SVG */
@@ -181,7 +162,7 @@
 </head>
 <body>
 
-    <div id="phase1" class="phase active">
+    <div id="phase1" class="phase" style="display: flex; opacity: 1;">
         <h1 id="title-angel">
             <span>A</span><span>n</span><span>g</span><span>e</span><span>l</span>
         </h1>
@@ -189,11 +170,9 @@
         <button id="btn-entrar">Entrar!</button>
     </div>
 
-    <div id="phase2" class="phase">
+    <div id="phase2" class="phase" style="display: none;">
         <canvas id="canvas-fireworks"></canvas>
         <div id="garden-container">
-            <div class="click-anywhere">Toca cualquier parte para continuar...</div>
-
             <svg class="plant" style="left: 10%; width: 60px; height: 80px; --speed: 3s; animation-delay: 0.1s;" viewBox="0 0 50 100">
                 <path d="M25,100 Q10,50 5,20 M25,100 Q20,60 15,30 M25,100 Q30,50 45,20 M25,100 Q35,60 40,35" stroke="#2e8b57" stroke-width="4" fill="none" stroke-linecap="round"/>
             </svg>
@@ -266,7 +245,7 @@
         </div>
     </div>
 
-    <div id="phase3" class="phase">
+    <div id="phase3" class="phase" style="display: none;">
         <div class="question-text">¿Te gustó? 🥺</div>
         <div class="buttons-container" id="btns-container">
             <button id="btn-yes" class="btn-answer">Sí</button>
@@ -279,17 +258,34 @@
     </div>
 
     <script>
-        // ==== GESTIÓN DE FASES ====
+        // ==== GESTIÓN DE TRANSICIONES ENTRE FASES ====
+        // Esta función garantiza que una fase desaparezca por completo antes de mostrar la otra
+        function cambiarFase(faseOcultar, faseMostrar, callback) {
+            faseOcultar.style.opacity = 0; // Se desvanece
+            
+            setTimeout(() => {
+                faseOcultar.style.display = 'none'; // Desaparece del código visualmente
+                
+                faseMostrar.style.display = 'flex'; // Aparece la nueva en el flujo
+                // Pequeño truco para que la animación de opacidad se aplique correctamente
+                void faseMostrar.offsetWidth; 
+                
+                faseMostrar.style.opacity = 1; // Se hace visible
+                
+                if(callback) callback(); // Ejecuta la lógica de la nueva fase
+            }, 800); // 800ms es lo que dura el fade
+        }
+
         const phase1 = document.getElementById('phase1');
         const phase2 = document.getElementById('phase2');
         const phase3 = document.getElementById('phase3');
         
-        // Fase 1: Botón Entrar
+        // ==== FASE 1 ====
         const btnEntrar = document.getElementById('btn-entrar');
         const letters = document.querySelectorAll('#title-angel span');
 
         btnEntrar.addEventListener('click', () => {
-            btnEntrar.style.pointerEvents = 'none'; // Evitar doble clic
+            btnEntrar.style.pointerEvents = 'none'; 
             
             // Animación letra por letra
             letters.forEach((letter, index) => {
@@ -299,45 +295,43 @@
                 }, index * 300);
             });
 
-            // Transición a la fase 2
+            // Transición a la fase 2 tras acabar las letras
             setTimeout(() => {
-                phase1.classList.remove('active');
-                phase2.classList.add('active');
-                iniciarFase2();
+                cambiarFase(phase1, phase2, iniciarFase2);
             }, letters.length * 300 + 800);
         });
 
-        // Fase 2: Jardín
+        // ==== FASE 2 ====
         let isPhase2Active = false;
+        
         function iniciarFase2() {
             isPhase2Active = true;
-            // Activar las animaciones de crecimiento y viento
+            
+            // Iniciar plantas
             const plants = document.querySelectorAll('.plant');
             plants.forEach(plant => {
                 plant.classList.add('grow');
-                setTimeout(() => { plant.classList.add('sway'); }, 1500); // Aplicar viento después de crecer
+                setTimeout(() => { plant.classList.add('sway'); }, 1500);
             });
+            
+            // Iniciar cohetes
             loopFuegosArtificiales();
+
+            // TEMPORIZADOR EXACTO DE 7 SEGUNDOS PARA PASAR A FASE 3
+            setTimeout(() => {
+                isPhase2Active = false; // Detiene los cohetes
+                cambiarFase(phase2, phase3);
+            }, 7000); // 7000 milisegundos = 7 segundos
         }
 
-        // Clic en el jardín para pasar a la fase 3
-        const garden = document.getElementById('garden-container');
-        garden.addEventListener('click', () => {
-            isPhase2Active = false; // Detiene la creación de nuevos fuegos
-            phase2.classList.remove('active');
-            phase3.classList.add('active');
-        });
-
-        // Fase 3: Los botones y el corazón
+        // ==== FASE 3 ====
         const btnNo = document.getElementById('btn-no');
         const btnYes = document.getElementById('btn-yes');
         const btnsContainer = document.getElementById('btns-container');
         const questionText = document.querySelector('.question-text');
         const finalHeart = document.getElementById('final-heart');
 
-        // Broma del botón No
         function moverBotonNo() {
-            // Generar posición random dentro de la pantalla, evitando salir de los bordes
             const maxX = window.innerWidth - btnNo.offsetWidth - 20;
             const maxY = window.innerHeight - btnNo.offsetHeight - 20;
             const randomX = Math.max(20, Math.random() * maxX);
@@ -350,23 +344,18 @@
 
         btnNo.addEventListener('mouseover', moverBotonNo);
         btnNo.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Evitar toque móvil directo
+            e.preventDefault(); 
             moverBotonNo();
         });
 
-        // Respuesta Sí
         btnYes.addEventListener('click', () => {
-            // Ocultar textos y botones
             questionText.style.display = 'none';
             btnsContainer.style.display = 'none';
-            btnNo.style.display = 'none';
             
-            // Explotar el corazón
             finalHeart.classList.add('explode-heart');
             
-            // Reiniciar página tras la explosión
             setTimeout(() => {
-                window.location.reload();
+                window.location.reload(); // Refresh
             }, 1500);
         });
 
@@ -434,7 +423,7 @@
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.05; // Gravedad
+                this.vy += 0.05;
                 this.alpha -= this.decay;
             }
             draw() {
@@ -449,29 +438,24 @@
 
         function loopFuegosArtificiales() {
             if (!isPhase2Active) {
-                // Limpiar suavemente si cambia de fase
-                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia el cielo si ya no estamos en fase 2
                 return;
             }
 
             requestAnimationFrame(loopFuegosArtificiales);
-            ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Efecto de estela
+            ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Probabilidad de lanzar un fuego artificial (no exagerado, normal)
             if (Math.random() < 0.03) {
                 fireworks.push(new Firework());
             }
 
-            // Actualizar y dibujar cohetes
             for (let i = fireworks.length - 1; i >= 0; i--) {
                 fireworks[i].update();
                 fireworks[i].draw();
                 if (fireworks[i].exploded) fireworks.splice(i, 1);
             }
 
-            // Actualizar y dibujar explosiones
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 particles[i].draw();
