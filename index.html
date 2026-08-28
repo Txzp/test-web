@@ -44,9 +44,8 @@
             color: #333333; 
             transition: color 0.5s ease, text-shadow 0.5s ease;
         }
-        /* Clase que se agregará letra por letra (Brillo tenue) */
         .glow-letter {
-            color: #c4c4c4 !important; /* Blanco grisáceo / No full blanco */
+            color: #c4c4c4 !important; 
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important;
         }
         
@@ -82,10 +81,9 @@
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 100%;
             z-index: 5;
-            cursor: pointer; /* Indica que se puede hacer click */
+            cursor: pointer;
         }
         
-        /* Animación de caída para las flores al hacer click */
         .falling-flower {
             position: absolute;
             pointer-events: none;
@@ -99,23 +97,25 @@
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Plantas del jardín */
+        /* Plantas del jardín con nueva animación de crecimiento más suave */
         .plant {
             position: absolute;
             bottom: 0;
             transform-origin: bottom center;
-            transform: scale(0);
-            filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.6)); /* Sombra para profundidad 3D */
+            transform: scaleY(0) scaleX(0.2);
+            opacity: 0;
+            filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.6));
         }
-        .grow { animation: growUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes growUp {
-            0% { transform: scale(0) translateY(50px); }
-            100% { transform: scale(1) translateY(0); }
+        .grow { animation: smoothGrow 1.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; }
+        @keyframes smoothGrow {
+            0% { transform: scaleY(0) scaleX(0.2); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scaleY(1) scaleX(1); opacity: 1; }
         }
         .sway { animation: swayWind var(--speed) ease-in-out infinite alternate; }
         @keyframes swayWind {
             0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1) rotate(-12deg); } /* Viento de derecha a izq */
+            100% { transform: scale(1) rotate(-10deg); }
         }
 
         /* ===== FASE 3: PREGUNTA Y CORAZÓN ===== */
@@ -126,12 +126,12 @@
         }
         .buttons-container {
             position: relative;
-            width: 400px; /* Más ancho para separar más los botones */
+            width: 400px;
             height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 100px; /* Botones mucho más separados */
+            gap: 100px;
         }
         .btn-answer {
             background: #ffffff;
@@ -143,13 +143,12 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 0 15px rgba(255,255,255,0.2);
-            transition: all 0.2s;
+            transition: background 0.2s, box-shadow 0.2s; /* Aseguramos que no escale ni altere tamaño en el hover/movimiento */
         }
         #btn-yes:hover { background: #e0e0e0; box-shadow: 0 0 25px rgba(255,255,255,0.5); }
-        #btn-no { position: absolute; transition: all 0.2s ease; right: 20px; } /* Posición inicial derecha */
-        #btn-yes { position: absolute; left: 20px; } /* Posición inicial izquierda */
+        #btn-no { position: absolute; right: 20px; } 
+        #btn-yes { position: absolute; left: 20px; } 
 
-        /* Corazón y su explosión */
         #final-heart {
             position: absolute;
             width: 80px;
@@ -164,14 +163,13 @@
         }
         @keyframes heartSequence {
             0% { transform: scale(0); opacity: 0; }
-            20% { transform: scale(1); opacity: 1; } /* Aparece bien */
-            40% { transform: scale(1.2); } /* Latido */
-            60% { transform: scale(0.3); } /* Se hace chiquito */
-            90% { transform: scale(3.5); filter: brightness(1.5); opacity: 1; } /* Se agranda mucho */
-            100% { transform: scale(4); opacity: 0; } /* Desaparece para simular rotura */
+            20% { transform: scale(1); opacity: 1; }
+            40% { transform: scale(1.2); }
+            60% { transform: scale(0.3); }
+            90% { transform: scale(3.5); filter: brightness(1.5); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
         }
 
-        /* Pedacitos del corazón roto (Partículas JS) */
         .heart-piece {
             position: absolute;
             width: 15px; height: 15px;
@@ -226,17 +224,16 @@
         <canvas id="canvas-wind"></canvas>
         <div id="garden-container">
             
-            <svg class="plant" style="left: 5%; width: 70px; height: 90px; --speed: 2.8s; animation-delay: 0.1s;" viewBox="0 0 50 100">
+            <svg class="plant" style="left: 4%; width: 70px; height: 90px; --speed: 2.8s; animation-delay: 0.1s;" viewBox="0 0 50 100">
                 <path d="M25,100 Q10,50 5,20 M25,100 Q20,60 15,30 M25,100 Q30,50 45,20" stroke="url(#stemGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
             </svg>
-            <svg class="plant" style="left: 90%; width: 60px; height: 80px; --speed: 3.2s; animation-delay: 0.3s;" viewBox="0 0 50 100">
+            <svg class="plant" style="left: 92%; width: 60px; height: 80px; --speed: 3.2s; animation-delay: 0.3s;" viewBox="0 0 50 100">
                 <path d="M25,100 Q15,40 10,10 M25,100 Q25,50 30,20 M25,100 Q40,60 45,30" stroke="url(#stemGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
             </svg>
 
-            <svg class="plant" style="left: 15%; width: 140px; height: 280px; --speed: 4s; animation-delay: 0.5s;" viewBox="0 0 100 250">
+            <svg class="plant" style="left: 10%; width: 130px; height: 260px; --speed: 4s; animation-delay: 0.4s;" viewBox="0 0 100 250">
                 <path d="M50,250 Q45,150 50,50" stroke="url(#stemGrad)" stroke-width="8" fill="none"/>
                 <path d="M46,160 Q15,150 20,120 Q40,140 46,160" fill="url(#stemGrad)"/>
-                <path d="M54,110 Q85,100 80,70 Q60,90 54,110" fill="url(#stemGrad)"/>
                 <g transform="translate(50, 50)">
                     <ellipse cx="0" cy="-28" rx="10" ry="28" fill="url(#petalGrad)" transform="rotate(0)" />
                     <ellipse cx="0" cy="-28" rx="10" ry="28" fill="url(#petalGrad)" transform="rotate(30)" />
@@ -254,23 +251,40 @@
                 </g>
             </svg>
             
-            <svg class="plant" style="left: 70%; width: 110px; height: 230px; --speed: 3.5s; animation-delay: 0.8s;" viewBox="0 0 100 250">
-                <path d="M50,250 Q55,150 50,50" stroke="url(#stemGrad)" stroke-width="6" fill="none"/>
-                <path d="M47,150 Q10,140 15,110 Q35,130 47,150" fill="url(#stemGrad)"/>
+            <svg class="plant" style="left: 30%; width: 115px; height: 240px; --speed: 3.6s; animation-delay: 0.6s;" viewBox="0 0 100 250">
+                <path d="M50,250 Q55,150 50,50" stroke="url(#stemGrad)" stroke-width="7" fill="none"/>
+                <path d="M54,120 Q85,110 80,90 Q65,100 54,120" fill="url(#stemGrad)"/>
                 <g transform="translate(50, 50)">
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(0)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(45)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(90)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(135)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(180)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(225)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(270)" />
-                    <ellipse cx="0" cy="-22" rx="8" ry="22" fill="url(#petalGrad)" transform="rotate(315)" />
-                    <circle cx="0" cy="0" r="16" fill="url(#sunflowerCenter)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(0)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(40)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(80)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(120)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(160)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(200)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(240)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(280)" />
+                    <ellipse cx="0" cy="-24" rx="9" ry="24" fill="url(#petalGrad)" transform="rotate(320)" />
+                    <circle cx="0" cy="0" r="18" fill="url(#sunflowerCenter)" />
                 </g>
             </svg>
 
-            <svg class="plant" style="left: 35%; width: 80px; height: 190px; --speed: 4.5s; animation-delay: 1s;" viewBox="0 0 100 200">
+            <svg class="plant" style="left: 75%; width: 120px; height: 250px; --speed: 3.5s; animation-delay: 0.8s;" viewBox="0 0 100 250">
+                <path d="M50,250 Q55,150 50,50" stroke="url(#stemGrad)" stroke-width="7" fill="none"/>
+                <path d="M47,150 Q10,140 15,110 Q35,130 47,150" fill="url(#stemGrad)"/>
+                <g transform="translate(50, 50)">
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(0)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(45)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(90)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(135)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(180)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(225)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(270)" />
+                    <ellipse cx="0" cy="-25" rx="9" ry="25" fill="url(#petalGrad)" transform="rotate(315)" />
+                    <circle cx="0" cy="0" r="19" fill="url(#sunflowerCenter)" />
+                </g>
+            </svg>
+
+            <svg class="plant" style="left: 48%; width: 85px; height: 200px; --speed: 4.5s; animation-delay: 1s;" viewBox="0 0 100 200">
                 <path d="M50,200 Q40,120 50,40" stroke="url(#stemGrad)" stroke-width="5" fill="none"/>
                 <g transform="translate(50, 40)">
                     <circle cx="-15" cy="-15" r="18" fill="url(#flowerGradPink)"/>
@@ -281,7 +295,7 @@
                 </g>
             </svg>
 
-            <svg class="plant" style="left: 55%; width: 65px; height: 160px; --speed: 3.8s; animation-delay: 1.2s;" viewBox="0 0 100 200">
+            <svg class="plant" style="left: 62%; width: 75px; height: 170px; --speed: 3.8s; animation-delay: 1.2s;" viewBox="0 0 100 200">
                 <path d="M50,200 Q60,120 50,40" stroke="url(#stemGrad)" stroke-width="4" fill="none"/>
                 <g transform="translate(50, 40)">
                     <circle cx="-12" cy="-12" r="14" fill="#ffcccb"/>
@@ -291,7 +305,7 @@
                 </g>
             </svg>
             
-            <svg class="plant" style="left: 80%; width: 75px; height: 170px; --speed: 4.2s; animation-delay: 0.7s;" viewBox="0 0 100 200">
+            <svg class="plant" style="left: 20%; width: 75px; height: 170px; --speed: 4.2s; animation-delay: 0.7s;" viewBox="0 0 100 200">
                 <path d="M50,200 Q40,120 50,40" stroke="url(#stemGrad)" stroke-width="5" fill="none"/>
                 <g transform="translate(50, 40)">
                     <circle cx="0" cy="-20" r="15" fill="#87cefa"/>
@@ -303,10 +317,10 @@
                 </g>
             </svg>
             
-            <svg class="plant" style="left: 25%; width: 50px; height: 70px; --speed: 2.5s; animation-delay: 0.4s;" viewBox="0 0 50 100">
+            <svg class="plant" style="left: 40%; width: 50px; height: 70px; --speed: 2.5s; animation-delay: 0.4s;" viewBox="0 0 50 100">
                 <path d="M25,100 Q15,40 10,10 M25,100 Q25,50 30,20" stroke="url(#stemGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
             </svg>
-            <svg class="plant" style="left: 45%; width: 70px; height: 60px; --speed: 3s; animation-delay: 0.2s;" viewBox="0 0 50 100">
+            <svg class="plant" style="left: 88%; width: 70px; height: 60px; --speed: 3s; animation-delay: 0.2s;" viewBox="0 0 50 100">
                 <path d="M25,100 Q10,50 5,20 M25,100 Q35,60 40,35" stroke="url(#stemGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
             </svg>
         </div>
@@ -325,7 +339,6 @@
     </div>
 
     <script>
-        // ==== FUNCIÓN DE CAMBIO DE FASE ====
         function cambiarFase(faseOcultar, faseMostrar, callback) {
             faseOcultar.style.opacity = 0; 
             setTimeout(() => {
@@ -341,51 +354,45 @@
         const phase2 = document.getElementById('phase2');
         const phase3 = document.getElementById('phase3');
         
-        // ==== FASE 1 ====
+        // FASE 1
         const btnEntrar = document.getElementById('btn-entrar');
         const letters = document.querySelectorAll('#title-angel span');
 
         btnEntrar.addEventListener('click', () => {
             btnEntrar.style.pointerEvents = 'none'; 
             
-            // Animación letra por letra (iluminando una por una, tenue)
             letters.forEach((letter, index) => {
                 setTimeout(() => {
                     letter.classList.add('glow-letter');
-                }, index * 300); // Entra de a una
+                }, index * 300); 
             });
 
-            // Pasar a la fase 2 tras animar las letras
             setTimeout(() => {
                 cambiarFase(phase1, phase2, iniciarFase2);
             }, letters.length * 300 + 800);
         });
 
-        // ==== FASE 2 ====
+        // FASE 2
         let isPhase2Active = false;
         
         function iniciarFase2() {
             isPhase2Active = true;
             
-            // Iniciar plantas
             const plants = document.querySelectorAll('.plant');
             plants.forEach(plant => {
                 plant.classList.add('grow');
-                setTimeout(() => { plant.classList.add('sway'); }, 1500);
+                setTimeout(() => { plant.classList.add('sway'); }, 1800);
             });
             
-            // Iniciar viento
             initWind();
             loopWind();
 
-            // TEMPORIZADOR AUMENTADO A 15 SEGUNDOS
             setTimeout(() => {
                 isPhase2Active = false;
                 cambiarFase(phase2, phase3, iniciarFase3);
             }, 15000); 
         }
 
-        // Lógica de caída de flores al clickear
         const garden = document.getElementById('garden-container');
         garden.addEventListener('click', (e) => {
             if(!isPhase2Active) return;
@@ -393,13 +400,11 @@
         });
 
         function crearFlorCayendo(x, y) {
-            // Genera un elemento SVG de flor en la posición X
             const flower = document.createElement('div');
             flower.className = 'falling-flower';
-            flower.style.left = (x - 25) + 'px'; // Centrado en el cursor
+            flower.style.left = (x - 25) + 'px'; 
             flower.style.top = (y - 25) + 'px';
             
-            // SVG simple de flor (sin emoji)
             flower.innerHTML = `
                 <svg width="50" height="50" viewBox="0 0 100 100">
                     <circle cx="50" cy="20" r="15" fill="url(#flowerGradPink)"/>
@@ -409,16 +414,11 @@
                     <circle cx="50" cy="50" r="12" fill="#ffd700"/>
                 </svg>
             `;
-            
             document.body.appendChild(flower);
-            
-            // Eliminar del DOM tras acabar la animación
-            setTimeout(() => {
-                flower.remove();
-            }, 4000);
+            setTimeout(() => { flower.remove(); }, 4000);
         }
 
-        // ==== LÓGICA DE VIENTO GRIS (CANVAS) ====
+        // VIENTO GRIS
         const canvas = document.getElementById('canvas-wind');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -431,15 +431,14 @@
 
         let windParticles = [];
         function initWind() {
-            // Poco viento, 40 partículas máximo
             for(let i = 0; i < 40; i++) {
                 windParticles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    speedX: -(Math.random() * 2 + 1), // Derecha a izquierda (negativo)
-                    speedY: Math.random() * 0.5 - 0.25, // Ligero movimiento arriba/abajo
+                    speedX: -(Math.random() * 2 + 1), 
+                    speedY: Math.random() * 0.5 - 0.25, 
                     size: Math.random() * 1.5 + 0.5,
-                    opacity: Math.random() * 0.4 + 0.1 // Tenues, grises
+                    opacity: Math.random() * 0.4 + 0.1 
                 });
             }
         }
@@ -456,7 +455,6 @@
                 p.x += p.speedX;
                 p.y += p.speedY;
 
-                // Si se salen por la izquierda, regresan a la derecha
                 if(p.x < 0) {
                     p.x = canvas.width;
                     p.y = Math.random() * canvas.height;
@@ -464,21 +462,19 @@
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(180, 180, 180, ${p.opacity})`; // Gris viento
+                ctx.fillStyle = `rgba(180, 180, 180, ${p.opacity})`; 
                 ctx.fill();
             });
         }
 
-        // ==== FASE 3 ====
+        // FASE 3
         const btnNo = document.getElementById('btn-no');
         const btnYes = document.getElementById('btn-yes');
         const btnsContainer = document.getElementById('btns-container');
         const questionText = document.querySelector('.question-text');
         const finalHeart = document.getElementById('final-heart');
 
-        function iniciarFase3() {
-            // Resetea estilos si hace falta (por si el usuario lo ve varias veces)
-        }
+        function iniciarFase3() {}
 
         function moverBotonNo() {
             const maxX = window.innerWidth - btnNo.offsetWidth - 20;
@@ -495,30 +491,20 @@
         btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moverBotonNo(); });
 
         btnYes.addEventListener('click', () => {
-            // Escondemos textos y botones para dar foco al corazón
             questionText.style.display = 'none';
             btnsContainer.style.display = 'none';
             
-            // Centramos el corazón
             finalHeart.style.left = 'calc(50% - 40px)';
             finalHeart.style.top = 'calc(50% - 40px)';
             
-            // Activamos la animación (Chiquito -> Gigante -> Desaparece)
             finalHeart.classList.add('heart-shatter-anim');
             
-            // Al final de la animación de CSS (aprox 1.8s), estallan las partículas y recarga
             setTimeout(() => {
                 explotarCorazon();
-                
-                // Esperar a que caigan los pedacitos y reiniciar todo
-                setTimeout(() => {
-                    window.location.reload(); 
-                }, 1500);
-
-            }, 1900); // Un pelín antes de acabar la animación
+                setTimeout(() => { window.location.reload(); }, 1500);
+            }, 1900);
         });
 
-        // Función para simular el corazón rompiéndose en pedacitos
         function explotarCorazon() {
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
@@ -527,7 +513,6 @@
                 const piece = document.createElement('div');
                 piece.className = 'heart-piece';
                 
-                // Dirección aleatoria radial
                 const angle = Math.random() * Math.PI * 2;
                 const distance = Math.random() * 300 + 50;
                 
