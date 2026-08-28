@@ -11,6 +11,7 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -23,9 +24,10 @@
             overflow: hidden;
             cursor: pointer;
             color: #ffffff;
+            perspective: 1000px; /* Necesario para el 3D */
         }
 
-        /* ===== FONDO DE PARTÍCULAS ===== */
+        /* ===== FONDO DE PARTÍCULAS MÁS BLANCAS ===== */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -36,48 +38,63 @@
             pointer-events: none;
         }
 
+        /* ===== CONTENEDORES CON EFECTO GLASS ===== */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            z-index: 10;
+            text-align: center;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
         /* ===== TEXTO INICIAL ===== */
         #title-initial {
             position: absolute;
-            z-index: 10;
-            font-size: clamp(1.5rem, 5vw, 4rem);
+            font-size: clamp(1.5rem, 4vw, 3rem);
             font-weight: 900;
-            text-align: center;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 40px rgba(255, 255, 255, 0.5);
-            animation: pulseText 2s infinite alternate;
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: float 4s ease-in-out infinite;
             pointer-events: none;
         }
 
         #title-initial.hidden {
             opacity: 0;
-            transform: scale(0.5);
+            transform: translateY(-50px) scale(0.8);
+            pointer-events: none;
         }
 
-        @keyframes pulseText {
-            0% { text-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255,255,255,0.8); transform: scale(1); }
-            100% { text-shadow: 0 0 20px #ffffff, 0 0 40px #ffffff, 0 0 60px rgba(255,255,255,0.8); transform: scale(1.05); }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
 
-        /* ===== CONTADOR DE CLICS ===== */
+        /* ===== CONTADOR DE CLICS (GLASS) ===== */
         #click-counter {
             position: fixed;
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
             font-size: 1.2rem;
             font-family: 'Courier New', monospace;
             letter-spacing: 3px;
             z-index: 20;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 30px;
             border-radius: 50px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             display: none;
             pointer-events: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
 
         #click-counter.visible {
@@ -85,10 +102,12 @@
             animation: fadeInUp 0.5s ease;
         }
 
-        /* ===== CORAZÓN ELÉCTRICO ===== */
+        /* ===== CORAZÓN 3D MULTILÍNEA ELÉCTRICO ===== */
         #heart-container {
             position: absolute;
             z-index: 10;
+            width: 400px;
+            height: 400px;
             display: none;
             justify-content: center;
             align-items: center;
@@ -99,39 +118,46 @@
             display: flex;
         }
 
-        #electric-heart {
-            width: 300px;
-            height: 300px;
-            overflow: visible;
-            filter: drop-shadow(0 0 15px #ffffff) drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
-            animation: electricFlicker 0.15s infinite alternate;
+        #heart-3d-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: spin3D 10s linear infinite;
         }
 
-        #heart-path {
+        @keyframes spin3D {
+            0% { transform: rotateY(0deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(10deg); }
+        }
+
+        .wire-heart {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             fill: none;
             stroke: #ffffff;
-            stroke-width: 4;
+            stroke-width: 2.5;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: stroke-dashoffset 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
         }
 
-        @keyframes electricFlicker {
-            0% { filter: drop-shadow(0 0 15px #ffffff) drop-shadow(0 0 30px rgba(255, 255, 255, 0.6)); }
-            100% { filter: drop-shadow(0 0 25px #ffffff) drop-shadow(0 0 50px #ffffff); }
+        .heart-path {
+            transition: stroke-dashoffset 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         /* ===== PARTÍCULAS DE EXPLOSIÓN ===== */
         .particle {
             position: fixed;
-            width: 4px;
-            height: 4px;
             background: #ffffff;
             border-radius: 50%;
             pointer-events: none;
             z-index: 100;
-            box-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff;
-            animation: particleFly 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            box-shadow: 0 0 10px #ffffff, 0 0 25px #ffffff;
+            animation: particleFly 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
         @keyframes particleFly {
@@ -150,9 +176,8 @@
             display: none;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.9);
             pointer-events: none;
-            transition: opacity 1s ease;
+            transition: opacity 1.5s ease;
         }
 
         #final-text-container.fade-out {
@@ -160,35 +185,28 @@
         }
 
         .falling-text {
-            font-size: clamp(2rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 6rem);
             font-weight: 900;
             text-align: center;
-            text-shadow: 0 0 20px #ffffff, 0 0 40px rgba(255,255,255,0.5);
-            animation: dropDown 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            text-shadow: 0 0 20px #ffffff, 0 0 50px rgba(255,255,255,0.7);
+            animation: dropDown 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             opacity: 0;
             padding: 20px;
         }
 
         @keyframes dropDown {
-            0% { transform: translateY(-100vh); opacity: 0; }
-            60% { transform: translateY(20px); opacity: 1; }
-            80% { transform: translateY(-10px); opacity: 1; }
-            100% { transform: translateY(0); opacity: 1; }
+            0% { transform: translateY(-100vh) scale(0.8); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
         }
 
-        /* ===== SISTEMA DE RATING ===== */
+        /* ===== SISTEMA DE RATING (GLASS) ===== */
         #rating-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             z-index: 300;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #000000;
             opacity: 0;
             transition: opacity 1.5s ease;
             pointer-events: auto;
@@ -200,34 +218,37 @@
         }
 
         .rating-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 30px;
-            text-shadow: 0 0 15px rgba(255,255,255,0.5);
+            text-shadow: 0 0 15px rgba(255,255,255,0.8);
         }
 
         .stars-container {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
 
         .star {
             font-size: 4rem;
-            color: #333;
+            color: rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
             text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
         }
 
         .star:hover, .star.active {
             color: #ffffff;
             text-shadow: 0 0 20px #ffffff, 0 0 40px #ffffff;
-            transform: scale(1.1);
+            -webkit-text-stroke: 0px;
+            transform: scale(1.2);
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
-            #electric-heart { width: 200px; height: 200px; }
-            .star { font-size: 3rem; }
+            #heart-container { width: 300px; height: 300px; }
+            .glass-panel { padding: 30px 20px; width: 90%; }
+            .star { font-size: 3rem; gap: 10px; }
         }
     </style>
 </head>
@@ -235,21 +256,34 @@
 
     <canvas id="particles-canvas"></canvas>
 
-    <div id="title-initial">CLICK PARA LA SORPRESA</div>
+    <div id="title-initial" class="glass-panel">
+        CLICK PARA LA SORPRESA
+    </div>
 
-    <div id="click-counter"><span style="color:#fff;">🤍</span> <span id="click-count">0</span> / 10</div>
+    <div id="click-counter">🤍 <span id="click-count">0</span> / 10</div>
 
     <div id="heart-container">
-        <svg id="electric-heart" viewBox="0 0 200 180">
-            <path id="heart-path" d="M 100, 160 C 100, 160 15, 95 15, 45 C 15, 15 50, 5 75, 25 C 100, 50 100, 50 100, 50 C 100, 50 100, 50 125, 25 C 150, 5 185, 15 185, 45 C 185, 95 100, 160 100, 160 Z" />
-        </svg>
+        <div id="heart-3d-wrapper">
+            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(0deg)">
+                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            </svg>
+            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(45deg)">
+                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            </svg>
+            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(90deg)">
+                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            </svg>
+            <svg class="wire-heart" viewBox="0 0 200 200" style="transform: rotateY(135deg)">
+                <path class="heart-path" d="M 100, 170 C 100, 170 15, 100 15, 50 C 15, 20 50, 10 75, 30 C 100, 55 100, 55 100, 55 C 100, 55 100, 55 125, 30 C 150, 10 185, 20 185, 50 C 185, 100 100, 170 100, 170 Z" />
+            </svg>
+        </div>
     </div>
 
     <div id="final-text-container">
         <div class="falling-text">Para la señora<br>Penny</div>
     </div>
 
-    <div id="rating-screen">
+    <div id="rating-screen" class="glass-panel">
         <div class="rating-title">¿Qué te pareció la sorpresa?</div>
         <div class="stars-container">
             <div class="star" data-value="1">★</div>
@@ -261,11 +295,11 @@
     </div>
 
     <script>
-        // 1. SISTEMA DE PARTÍCULAS
+        // 1. SISTEMA DE PARTÍCULAS BLANCAS Y BRILLANTES
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const PARTICLE_COUNT = 80;
+        const PARTICLE_COUNT = 100;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -279,10 +313,11 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.opacity = Math.random() * 0.5 + 0.1;
+                this.size = Math.random() * 2.5 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                // Más blancas y opacas
+                this.opacity = Math.random() * 0.6 + 0.4;
             }
             update() {
                 this.x += this.speedX;
@@ -294,6 +329,8 @@
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.shadowColor = '#ffffff';
+                ctx.shadowBlur = 15;
                 ctx.fill();
             }
         }
@@ -307,12 +344,12 @@
         }
         animateParticles();
 
-        // 2. LÓGICA PRINCIPAL Y CORAZÓN SVG
+        // 2. LÓGICA PRINCIPAL Y CORAZÓN 3D
         const titleElement = document.getElementById('title-initial');
         const clickCounter = document.getElementById('click-counter');
         const clickCountSpan = document.getElementById('click-count');
         const heartContainer = document.getElementById('heart-container');
-        const heartPath = document.getElementById('heart-path');
+        const heartPaths = document.querySelectorAll('.heart-path');
         const finalTextContainer = document.getElementById('final-text-container');
         const ratingScreen = document.getElementById('rating-screen');
 
@@ -320,28 +357,35 @@
         const MAX_CLICKS = 10;
         let isAnimating = false;
 
-        // Configurar la línea del SVG
-        const pathLength = heartPath.getTotalLength();
-        heartPath.style.strokeDasharray = pathLength;
-        heartPath.style.strokeDashoffset = pathLength; // Oculto al inicio
+        // Configurar todas las líneas del SVG para que empiecen ocultas
+        const pathLength = heartPaths[0].getTotalLength();
+        heartPaths.forEach(path => {
+            path.style.strokeDasharray = pathLength;
+            path.style.strokeDashoffset = pathLength;
+        });
 
         function createExplosion(x, y) {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 70; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 200 + 50;
+                const distance = Math.random() * 250 + 80;
+                const size = Math.random() * 5 + 2;
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
                 particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
                 particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
                 particle.style.left = x + 'px';
                 particle.style.top = y + 'px';
+                
                 document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
+                setTimeout(() => particle.remove(), 1200);
             }
         }
 
         document.addEventListener('click', (e) => {
-            // Prevenir clics durante animaciones o en las estrellas directamente
+            // Prevenir clics si ya terminó o si tocan las estrellas
             if (isAnimating || clickCount >= MAX_CLICKS || e.target.classList.contains('star')) return;
 
             if (clickCount === 0) {
@@ -353,42 +397,46 @@
             clickCount++;
             clickCountSpan.textContent = clickCount;
 
-            // Avanzar el dibujo del corazón
+            // Dibujar progresivamente todas las capas 3D
             const progress = clickCount / MAX_CLICKS;
-            heartPath.style.strokeDashoffset = pathLength - (pathLength * progress);
+            heartPaths.forEach(path => {
+                path.style.strokeDashoffset = pathLength - (pathLength * progress);
+            });
 
+            // Pequeña explosión de chispa en cada clic
+            const rect = heartContainer.getBoundingClientRect();
+            
             if (clickCount >= MAX_CLICKS) {
                 isAnimating = true;
                 clickCounter.classList.remove('visible');
 
-                // Romper y explotar
+                // Hacer brillar el corazón completo y explotarlo
                 setTimeout(() => {
-                    const rect = heartContainer.getBoundingClientRect();
                     createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
                     heartContainer.style.display = 'none';
 
-                    // Mostrar texto de caída
+                    // Mostrar el texto final
                     setTimeout(() => {
                         finalTextContainer.style.display = 'flex';
                         
-                        // Esperar 5 segundos, desvanecer texto y mostrar estrellas
+                        // Esperar 5 segundos, desvanecer y mostrar las estrellas
                         setTimeout(() => {
                             finalTextContainer.classList.add('fade-out');
                             
                             setTimeout(() => {
                                 finalTextContainer.style.display = 'none';
                                 ratingScreen.classList.add('visible');
-                            }, 1000); // tiempo del fade-out
+                            }, 1500); // tiempo de fade out
 
-                        }, 5000);
+                        }, 5000); // 5 segundos mostrado
 
-                    }, 500);
+                    }, 600); // delay después de la explosión
 
-                }, 400); // Pequeña pausa antes de explotar
+                }, 400); // pausa antes de explotar
             }
         });
 
-        // 3. LÓGICA DE ESTRELLAS
+        // 3. LÓGICA DE LAS ESTRELLAS
         const stars = document.querySelectorAll('.star');
         stars.forEach(star => {
             star.addEventListener('click', (e) => {
@@ -400,7 +448,6 @@
                         s.classList.remove('active');
                     }
                 });
-                // Aquí podrías enviar el rating a un servidor si lo desearas
             });
         });
     </script>
