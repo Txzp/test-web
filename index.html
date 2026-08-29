@@ -3,168 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>101 Días de Racha - TikTok</title>
+    <title>Roblox Aim Trainer - Taser Practice</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
         }
-
         body {
-            background-color: #0b0b0e;
-            color: #ffffff;
+            background-color: #0e0e12;
+            color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
-            position: relative;
+            height: 100vh;
+            cursor: none; /* Oculta el cursor normal para usar el dot blanco */
         }
-
-        /* Bolitas de fondo animadas */
-        .dot {
+        #ui {
             position: absolute;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
             pointer-events: none;
-            animation: floatDot 8s infinite linear;
         }
-
-        @keyframes floatDot {
-            0% {
-                transform: translateY(105vh) scale(0.8);
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
+        .stat-box {
+            background: rgba(25, 25, 35, 0.85);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
-        .container {
-            text-align: center;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            margin-bottom: 10px;
-            color: #ff0050;
-            text-shadow: 0 0 15px rgba(255, 0, 80, 0.4);
-        }
-
-        .subtitle {
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            color: #00f2fe;
-            margin-bottom: 25px;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-        }
-
-        .timer-box {
-            font-size: clamp(5rem, 12vw, 8rem);
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
-            letter-spacing: 2px;
-        }
-
-        /* Contenedor final */
-        #final-container {
-            display: none;
-            text-align: center;
-            z-index: 10;
-        }
-
-        .final-text {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 900;
+        .stat-box span {
             color: #ff3366;
-            text-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
-            animation: popIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            padding: 20px;
         }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(0.2);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        #fireworks-canvas {
+        #start-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 5;
+            background: rgba(14, 14, 18, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            gap: 20px;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #ff3366;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+        p {
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+        .btn {
+            background: linear-gradient(135deg, #ff3366 0%, #ff6b6b 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        canvas {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="fireworks-canvas"></canvas>
-    <div id="bg-dots"></div>
-
-    <!-- Pantalla del Temporizador -->
-    <div class="container" id="main-container">
-        <h1>🔥 101 Días de Racha en TikTok 🔥</h1>
-        <div class="subtitle">Espera para el regalo</div>
-        <div class="timer-box" id="timer">35</div>
+    <div id="start-screen">
+        <h1>ROBLOX AIM TRAINER</h1>
+        <p>Práctica de Puntería • Taser Rojo & Bolitas en Movimiento</p>
+        <button class="btn" onclick="startGame()">¡Comenzar Entrenamiento!</button>
     </div>
 
-    <!-- Pantalla Final -->
-    <div id="final-container">
-        <div class="final-text">Elimina la cuenta 🙏🥀</div>
+    <div id="ui">
+        <div class="stat-box">Puntuación: <span id="score">0</span></div>
+        <div class="stat-box">Precisión: <span id="accuracy">100</span>%</div>
+        <div class="stat-box">Tiempo: <span id="timer">30</span>s</div>
     </div>
+
+    <canvas id="gameCanvas"></canvas>
 
     <script>
-        // Generar bolitas de fondo aleatorias
-        const bgDots = document.getElementById('bg-dots');
-        for (let i = 0; i < 45; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            const size = Math.random() * 6 + 3;
-            dot.style.width = size + 'px';
-            dot.style.height = size + 'px';
-            dot.style.left = Math.random() * 100 + 'vw';
-            dot.style.animationDuration = (Math.random() * 5 + 6) + 's';
-            dot.style.animationDelay = (Math.random() * 5) + 's';
-            bgDots.appendChild(dot);
-        }
-
-        // Lógica del Temporizador de 35 segundos
-        let timeLeft = 35;
-        const timerEl = document.getElementById('timer');
-        const mainContainer = document.getElementById('main-container');
-        const finalContainer = document.getElementById('final-container');
-
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerEl.textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                mainContainer.style.display = 'none';
-                finalContainer.style.display = 'block';
-                startFireworks();
-            }
-        }, 1000);
-
-        // Sistema simple de fuegos artificiales en Canvas
-        const canvas = document.getElementById('fireworks-canvas');
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
@@ -174,58 +112,196 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let particles = [];
+        let gameRunning = false;
+        let score = 0;
+        let totalClicks = 0;
+        let hits = 0;
+        let timeLeft = 30;
+        let timerInterval;
 
-        function startFireworks() {
-            // Lanzar fuegos artificiales periódicamente
-            setInterval(() => {
-                createFirework(
-                    Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
-                    Math.random() * (canvas.height * 0.5)
-                );
-            }, 350);
-            animateFireworks();
-        }
+        let targets = [];
+        let tracers = [];
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
 
-        function createFirework(x, y) {
-            const count = 60;
-            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 7 + 2;
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    alpha: 1,
-                    color: color,
-                    decay: Math.random() * 0.012 + 0.008
-                });
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (!gameRunning) return;
+            totalClicks++;
+
+            // Disparar taser rojo desde la parte inferior central hacia el punto de click
+            const startX = canvas.width / 2;
+            const startY = canvas.height;
+            tracers.push({
+                startX: startX,
+                startY: startY,
+                endX: e.clientX,
+                endY: e.clientY,
+                alpha: 1
+            });
+
+            // Comprobar si dio a alguna bolita
+            let hit = false;
+            for (let i = targets.length - 1; i >= 0; i--) {
+                const t = targets[i];
+                const dist = Math.hypot(e.clientX - t.x, e.clientY - t.y);
+                if (dist <= t.radius) {
+                    hit = true;
+                    hits++;
+                    score += 10;
+                    targets.splice(i, 1);
+                    spawnTarget();
+                    break;
+                }
             }
+
+            updateUI();
+        });
+
+        function spawnTarget() {
+            const radius = Math.random() * 15 + 18; // Tamaño de bolita óptimo para práctica
+            const x = Math.random() * (canvas.width - 150) + 75;
+            const y = Math.random() * (canvas.height - 250) + 100;
+            const speed = Math.random() * 2.5 + 1.5;
+            const angle = Math.random() * Math.PI * 2;
+
+            targets.push({
+                x: x,
+                y: y,
+                radius: radius,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                alpha: 1,
+                maxLife: 150, // Tiempo antes de desaparecer si no se toca (~2.5 segundos)
+                life: 150
+            });
         }
 
-        function animateFireworks() {
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            gameRunning = true;
+            score = 0;
+            totalClicks = 0;
+            hits = 0;
+            timeLeft = 30;
+            targets = [];
+            tracers = [];
+
+            // Spawnear 4 bolitas iniciales
+            for (let i = 0; i < 4; i++) {
+                spawnTarget();
+            }
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            loop();
+        }
+
+        function endGame() {
+            gameRunning = false;
+            clearInterval(timerInterval);
+            const screen = document.getElementById('start-screen');
+            screen.style.display = 'flex';
+            screen.querySelector('h1').textContent = '¡TIEMPO AGOTADO!';
+            screen.querySelector('p').innerHTML = `Puntuación Final: <b>${score}</b> | Precisión: <b>${totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 0}%</b>`;
+            screen.querySelector('.btn').textContent = 'Jugar de Nuevo';
+        }
+
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            const acc = totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 100;
+            document.getElementById('accuracy').textContent = acc;
+        }
+
+        function loop() {
+            if (!gameRunning) return;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, index) => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.04; // Gravedad
-                p.alpha -= p.decay;
+
+            // Actualizar y dibujar bolitas
+            for (let i = targets.length - 1; i >= 0; i--) {
+                let t = targets[i];
+                t.x += t.vx;
+                t.y += t.vy;
+
+                // Rebotes en los bordes
+                if (t.x - t.radius < 0 || t.x + t.radius > canvas.width) t.vx *= -1;
+                if (t.y - t.radius < 70 || t.y + t.radius > canvas.height) t.vy *= -1;
+
+                // Desaparición gradual por vida
+                t.life--;
+                if (t.life <= 0) {
+                    targets.splice(i, 1);
+                    spawnTarget();
+                    continue;
+                }
+
+                t.alpha = t.life / t.maxLife;
 
                 ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
+                ctx.globalAlpha = t.alpha;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+                ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f2fe';
+                ctx.shadowColor = '#00f2fe';
+                ctx.shadowBlur = 15;
                 ctx.fill();
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
                 ctx.restore();
+            }
 
-                if (p.alpha <= 0) {
-                    particles.splice(index, 1);
+            // Mantener siempre 4 bolitas activas en pantalla
+            while (targets.length < 4) {
+                spawnTarget();
+            }
+
+            // Dibujar y desvanecer el taser rojo al hacer clic
+            for (let i = tracers.length - 1; i >= 0; i--) {
+                let tr = tracers[i];
+                tr.alpha -= 0.1; // se desvanece rápido
+
+                if (tr.alpha <= 0) {
+                    tracers.splice(i, 1);
+                    continue;
                 }
-            });
-            requestAnimationFrame(animateFireworks);
+
+                ctx.save();
+                ctx.globalAlpha = tr.alpha;
+                ctx.beginPath();
+                ctx.moveTo(tr.startX, tr.startY);
+                ctx.lineTo(tr.endX, tr.endY);
+                ctx.strokeStyle = '#ff0055';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#ff0055';
+                ctx.shadowBlur = 12;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Dibujar crosshair: dot blanco exacto en el cursor
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#ffffff';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.restore();
+
+            requestAnimationFrame(loop);
         }
     </script>
 </body>
