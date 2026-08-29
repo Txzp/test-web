@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Aim Trainer - Taser Practice</title>
+    <title>Roblox Aim Trainer Pro</title>
     <style>
         * {
             margin: 0;
@@ -12,73 +12,127 @@
             user-select: none;
         }
         body {
-            background-color: #0e0e12;
+            background-color: #0b0b0e;
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             height: 100vh;
-            cursor: none; /* Oculta el cursor normal para usar el dot blanco */
+            cursor: none;
+        }
+        #menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 11, 14, 0.96);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            gap: 25px;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            color: #ff3366;
+            text-shadow: 0 0 25px rgba(255, 51, 102, 0.6);
+            letter-spacing: 1px;
+        }
+        .stats-panel {
+            background: rgba(25, 25, 35, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 12px;
+            display: flex;
+            gap: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-item span {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #00f2fe;
+        }
+        .stat-item label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .modes-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-mode {
+            background: linear-gradient(135deg, #1f1f2e 0%, #2a2a3f 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 200px;
+        }
+        .btn-mode span {
+            font-size: 0.8rem;
+            color: #aaa;
+            font-weight: normal;
+        }
+        .btn-mode:hover {
+            transform: translateY(-3px);
+            border-color: #ff3366;
+            box-shadow: 0 6px 25px rgba(255, 51, 102, 0.3);
         }
         #ui {
             position: absolute;
             top: 20px;
             left: 20px;
             display: flex;
-            gap: 20px;
+            gap: 15px;
             z-index: 10;
             pointer-events: none;
+            display: none;
         }
         .stat-box {
             background: rgba(25, 25, 35, 0.85);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .stat-box span {
             color: #ff3366;
         }
-        #start-screen {
+        #btn-exit {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(14, 14, 18, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            gap: 20px;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            color: #ff3366;
-            text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
-        }
-        p {
-            color: #aaa;
-            font-size: 1.2rem;
-        }
-        .btn {
-            background: linear-gradient(135deg, #ff3366 0%, #ff6b6b 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 30px;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid #ff3366;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
-            transition: transform 0.2s;
+            font-weight: bold;
+            z-index: 10;
+            display: none;
+            transition: background 0.2s;
         }
-        .btn:hover {
-            transform: scale(1.05);
+        #btn-exit:hover {
+            background: #ff3366;
         }
         canvas {
             display: block;
@@ -87,17 +141,49 @@
 </head>
 <body>
 
-    <div id="start-screen">
-        <h1>ROBLOX AIM TRAINER</h1>
-        <p>Práctica de Puntería • Taser Rojo & Bolitas en Movimiento</p>
-        <button class="btn" onclick="startGame()">¡Comenzar Entrenamiento!</button>
+    <div id="menu-screen">
+        <h1>ROBLOX AIM TRAINER PRO</h1>
+        
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span id="stat-best">0</span>
+                <label>Mejor Puntuación</label>
+            </div>
+            <div class="stat-item">
+                <span id="stat-hits">0</span>
+                <label>Aciertos Totales</label>
+            </div>
+            <div class="stat-item">
+                <span id="stat-acc">100%</span>
+                <label>Precisión Global</label>
+            </div>
+        </div>
+
+        <p style="color: #aaa;">Selecciona tu modo de entrenamiento con Taser y Punto Rojo:</p>
+
+        <div class="modes-container">
+            <button class="btn-mode" onclick="startGame('classic')">
+                Modo Clásico (30s)
+                <span>Bolitas móviles con tiempo límite</span>
+            </button>
+            <button class="btn-mode" onclick="startGame('infinite')">
+                Práctica Infinita (Sin Tiempo)
+                <span>Entrena libremente sin presión</span>
+            </button>
+            <button class="btn-mode" onclick="startGame('flick')">
+                Flick / Estático (Sin Tiempo)
+                <span>Aparecen y desaparecen rápido</span>
+            </button>
+        </div>
     </div>
 
     <div id="ui">
         <div class="stat-box">Puntuación: <span id="score">0</span></div>
         <div class="stat-box">Precisión: <span id="accuracy">100</span>%</div>
-        <div class="stat-box">Tiempo: <span id="timer">30</span>s</div>
+        <div class="stat-box" id="timer-box">Tiempo: <span id="timer">30</span>s</div>
     </div>
+
+    <button id="btn-exit" onclick="returnToMenu()">Salir al Menú</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -113,6 +199,7 @@
         resizeCanvas();
 
         let gameRunning = false;
+        let currentMode = 'classic';
         let score = 0;
         let totalClicks = 0;
         let hits = 0;
@@ -124,6 +211,17 @@
         let mouseX = canvas.width / 2;
         let mouseY = canvas.height / 2;
 
+        // Cargar estadísticas guardadas
+        let stats = JSON.parse(localStorage.getItem('aim_stats')) || { best: 0, hits: 0, totalClicks: 0 };
+        updateMenuStats();
+
+        function updateMenuStats() {
+            document.getElementById('stat-best').textContent = stats.best;
+            document.getElementById('stat-hits').textContent = stats.hits;
+            const globalAcc = stats.totalClicks > 0 ? Math.round((stats.hits / stats.totalClicks) * 100) : 100;
+            document.getElementById('stat-acc').textContent = globalAcc + '%';
+        }
+
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
@@ -133,18 +231,16 @@
             if (!gameRunning) return;
             totalClicks++;
 
-            // Disparar taser rojo desde la parte inferior central hacia el punto de click
-            const startX = canvas.width / 2;
-            const startY = canvas.height;
+            // Rayo Taser rojo desde la parte inferior central
             tracers.push({
-                startX: startX,
-                startY: startY,
+                startX: canvas.width / 2,
+                startY: canvas.height,
                 endX: e.clientX,
                 endY: e.clientY,
                 alpha: 1
             });
 
-            // Comprobar si dio a alguna bolita
+            // Comprobar colisión con bolitas
             let hit = false;
             for (let i = targets.length - 1; i >= 0; i--) {
                 const t = targets[i];
@@ -163,47 +259,60 @@
         });
 
         function spawnTarget() {
-            const radius = Math.random() * 15 + 18; // Tamaño de bolita óptimo para práctica
+            const radius = currentMode === 'flick' ? 22 : (Math.random() * 15 + 16);
             const x = Math.random() * (canvas.width - 150) + 75;
             const y = Math.random() * (canvas.height - 250) + 100;
-            const speed = Math.random() * 2.5 + 1.5;
-            const angle = Math.random() * Math.PI * 2;
+            
+            let vx = 0, vy = 0;
+            if (currentMode !== 'flick') {
+                const speed = Math.random() * 2.5 + 1.5;
+                const angle = Math.random() * Math.PI * 2;
+                vx = Math.cos(angle) * speed;
+                vy = Math.sin(angle) * speed;
+            }
 
             targets.push({
                 x: x,
                 y: y,
                 radius: radius,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
+                vx: vx,
+                vy: vy,
                 alpha: 1,
-                maxLife: 150, // Tiempo antes de desaparecer si no se toca (~2.5 segundos)
-                life: 150
+                maxLife: currentMode === 'flick' ? 90 : 180, // El modo flick desaparece más rápido
+                life: currentMode === 'flick' ? 90 : 180
             });
         }
 
-        function startGame() {
-            document.getElementById('start-screen').style.display = 'none';
+        function startGame(mode) {
+            currentMode = mode;
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('ui').style.display = 'flex';
+            document.getElementById('btn-exit').style.display = 'block';
+
             gameRunning = true;
             score = 0;
             totalClicks = 0;
             hits = 0;
-            timeLeft = 30;
             targets = [];
             tracers = [];
 
-            // Spawnear 4 bolitas iniciales
+            if (mode === 'classic') {
+                timeLeft = 30;
+                document.getElementById('timer-box').style.display = 'block';
+                clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timer').textContent = timeLeft;
+                    if (timeLeft <= 0) endGame();
+                }, 1000);
+            } else {
+                document.getElementById('timer-box').style.display = 'none'; // Sin tiempo
+            }
+
+            // Iniciar con 4 objetivos
             for (let i = 0; i < 4; i++) {
                 spawnTarget();
             }
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    endGame();
-                }
-            }, 1000);
 
             loop();
         }
@@ -211,11 +320,23 @@
         function endGame() {
             gameRunning = false;
             clearInterval(timerInterval);
-            const screen = document.getElementById('start-screen');
-            screen.style.display = 'flex';
-            screen.querySelector('h1').textContent = '¡TIEMPO AGOTADO!';
-            screen.querySelector('p').innerHTML = `Puntuación Final: <b>${score}</b> | Precisión: <b>${totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 0}%</b>`;
-            screen.querySelector('.btn').textContent = 'Jugar de Nuevo';
+
+            // Actualizar datos de localStorage
+            if (score > stats.best) stats.best = score;
+            stats.hits += hits;
+            stats.totalClicks += totalClicks;
+            localStorage.setItem('aim_stats', JSON.stringify(stats));
+
+            returnToMenu();
+        }
+
+        function returnToMenu() {
+            gameRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('menu-screen').style.display = 'flex';
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('btn-exit').style.display = 'none';
+            updateMenuStats();
         }
 
         function updateUI() {
@@ -229,17 +350,19 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Actualizar y dibujar bolitas
+            // Actualizar y renderizar bolitas
             for (let i = targets.length - 1; i >= 0; i--) {
                 let t = targets[i];
                 t.x += t.vx;
                 t.y += t.vy;
 
-                // Rebotes en los bordes
-                if (t.x - t.radius < 0 || t.x + t.radius > canvas.width) t.vx *= -1;
-                if (t.y - t.radius < 70 || t.y + t.radius > canvas.height) t.vy *= -1;
+                // Rebote en bordes (solo si se mueven)
+                if (currentMode !== 'flick') {
+                    if (t.x - t.radius < 0 || t.x + t.radius > canvas.width) t.vx *= -1;
+                    if (t.y - t.radius < 70 || t.y + t.radius > canvas.height) t.vy *= -1;
+                }
 
-                // Desaparición gradual por vida
+                // Vida útil del blanco
                 t.life--;
                 if (t.life <= 0) {
                     targets.splice(i, 1);
@@ -253,8 +376,8 @@
                 ctx.globalAlpha = t.alpha;
                 ctx.beginPath();
                 ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-                ctx.fillStyle = '#00f2fe';
-                ctx.shadowColor = '#00f2fe';
+                ctx.fillStyle = currentMode === 'flick' ? '#ff3366' : '#00f2fe';
+                ctx.shadowColor = currentMode === 'flick' ? '#ff3366' : '#00f2fe';
                 ctx.shadowBlur = 15;
                 ctx.fill();
                 ctx.lineWidth = 3;
@@ -263,15 +386,15 @@
                 ctx.restore();
             }
 
-            // Mantener siempre 4 bolitas activas en pantalla
+            // Mantener siempre 4 bolitas en pantalla
             while (targets.length < 4) {
                 spawnTarget();
             }
 
-            // Dibujar y desvanecer el taser rojo al hacer clic
+            // Taser rojo con efecto de desvanecimiento
             for (let i = tracers.length - 1; i >= 0; i--) {
                 let tr = tracers[i];
-                tr.alpha -= 0.1; // se desvanece rápido
+                tr.alpha -= 0.15;
 
                 if (tr.alpha <= 0) {
                     tracers.splice(i, 1);
@@ -291,7 +414,7 @@
                 ctx.restore();
             }
 
-            // Dibujar crosshair: dot blanco exacto en el cursor
+            // Crosshair (Punto blanco central exacto)
             ctx.save();
             ctx.beginPath();
             ctx.arc(mouseX, mouseY, 4, 0, Math.PI * 2);
