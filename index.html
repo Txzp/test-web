@@ -3,305 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bingo de Mamá</title>
+    <title>101 Días de Racha - TikTok</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
-            background-color: #ffffff;
+            background-color: #0b0b0e;
+            color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             overflow: hidden;
             position: relative;
-            color: #333;
         }
 
-        .main-content {
+        /* Bolitas de fondo animadas */
+        .dot {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatDot 8s infinite linear;
+        }
+
+        @keyframes floatDot {
+            0% {
+                transform: translateY(105vh) scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
             z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            gap: 20px;
+            padding: 20px;
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: #ff477e;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 10px;
+            color: #ff0050;
+            text-shadow: 0 0 15px rgba(255, 0, 80, 0.4);
         }
 
-        .number-box {
-            width: 220px;
-            height: 220px;
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-            border-radius: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 15px 35px rgba(255, 117, 140, 0.3);
-            position: relative;
-            overflow: hidden;
+        .subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            color: #00f2fe;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
         }
 
-        #current-number {
-            font-size: clamp(5rem, 12vw, 7rem);
-            font-weight: bold;
+        .timer-box {
+            font-size: clamp(5rem, 12vw, 8rem);
+            font-weight: 900;
             color: #ffffff;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
         }
 
-        /* Animación de revelación de 2.5 segundos */
-        .reveal-anim {
-            animation: revealEffect 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-        }
-
-        @keyframes revealEffect {
-            0% {
-                transform: scale(0.3) rotate(-15deg);
-                opacity: 0.2;
-                filter: blur(4px);
-            }
-            50% {
-                transform: scale(1.15) rotate(5deg);
-                opacity: 0.8;
-                filter: blur(1px);
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-                filter: blur(0);
-            }
-        }
-
-        #btn-next {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border: none;
-            padding: 18px 45px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(37, 117, 252, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        #btn-next:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(37, 117, 252, 0.4);
-        }
-
-        #btn-next:active {
-            transform: scale(0.95);
-        }
-
-        #btn-next:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .history-container {
-            width: 90%;
-            max-width: 600px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+        /* Contenedor final */
+        #final-container {
+            display: none;
             text-align: center;
             z-index: 10;
         }
 
-        .history-title {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 5px;
-            font-weight: 600;
+        .final-text {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: #ff3366;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
+            animation: popIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            padding: 20px;
         }
 
-        #history-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            justify-content: center;
-            flex-wrap: wrap;
-            max-height: 70px;
+        @keyframes popIn {
+            0% {
+                transform: scale(0.2);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
-        .history-badge {
-            background: #ffffff;
-            border: 2px solid #ff7eb3;
-            color: #ff477e;
-            font-weight: bold;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .wave-container {
+        #fireworks-canvas {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 150px;
-            overflow: hidden;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-50-200.8 0-250 50-394.5 50v31.8h800v-31.8z' fill='%23f1f3f5'/%3E%3C/svg%3E");
-            background-size: 50% 100%;
-        }
-
-        .wave1 {
-            animation: waveMove 12s linear infinite;
-            opacity: 0.7;
-            bottom: 0px;
-        }
-
-        .wave2 {
-            animation: waveMove 8s linear infinite reverse;
-            opacity: 0.4;
-            bottom: 10px;
-        }
-
-        @keyframes waveMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            pointer-events: none;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-content">
-        <h1>Bingo 🎯</h1>
-        
-        <div class="number-box">
-            <span id="current-number">--</span>
-        </div>
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="bg-dots"></div>
 
-        <button id="btn-next">¡Sacar Número!</button>
+    <!-- Pantalla del Temporizador -->
+    <div class="container" id="main-container">
+        <h1>🔥 101 Días de Racha en TikTok 🔥</h1>
+        <div class="subtitle">Espera para el regalo</div>
+        <div class="timer-box" id="timer">35</div>
     </div>
 
-    <div class="history-container">
-        <div class="history-title">Últimos números cantados:</div>
-        <div id="history-list"></div>
-    </div>
-
-    <div class="wave-container">
-        <div class="wave wave1"></div>
-        <div class="wave wave2"></div>
+    <!-- Pantalla Final -->
+    <div id="final-container">
+        <div class="final-text">Elimina la cuenta 🙏🥀</div>
     </div>
 
     <script>
-        // Secuencia exacta solicitada por tu mamá
-        const bingoSequence = [18, 14, 10, 8, 11, 16, 13];
-        let currentIndex = 0;
-        let calledNumbers = [];
+        // Generar bolitas de fondo aleatorias
+        const bgDots = document.getElementById('bg-dots');
+        for (let i = 0; i < 45; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            const size = Math.random() * 6 + 3;
+            dot.style.width = size + 'px';
+            dot.style.height = size + 'px';
+            dot.style.left = Math.random() * 100 + 'vw';
+            dot.style.animationDuration = (Math.random() * 5 + 6) + 's';
+            dot.style.animationDelay = (Math.random() * 5) + 's';
+            bgDots.appendChild(dot);
+        }
 
-        const btnNext = document.getElementById('btn-next');
-        const numberDisplay = document.getElementById('current-number');
-        const historyList = document.getElementById('history-list');
+        // Lógica del Temporizador de 35 segundos
+        let timeLeft = 35;
+        const timerEl = document.getElementById('timer');
+        const mainContainer = document.getElementById('main-container');
+        const finalContainer = document.getElementById('final-container');
 
-        // Función para reproducir sonido de revelación integrado (Web Audio API)
-        function playRevealSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                // Tono de suspenso que sube durante los 2.5 segundos
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 2.5);
-                
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 2.5);
-            } catch (e) {
-                console.log("Audio no soportado o bloqueado por el navegador");
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                mainContainer.style.display = 'none';
+                finalContainer.style.display = 'block';
+                startFireworks();
+            }
+        }, 1000);
+
+        // Sistema simple de fuegos artificiales en Canvas
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let particles = [];
+
+        function startFireworks() {
+            // Lanzar fuegos artificiales periódicamente
+            setInterval(() => {
+                createFirework(
+                    Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+                    Math.random() * (canvas.height * 0.5)
+                );
+            }, 350);
+            animateFireworks();
+        }
+
+        function createFirework(x, y) {
+            const count = 60;
+            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 7 + 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    alpha: 1,
+                    color: color,
+                    decay: Math.random() * 0.012 + 0.008
+                });
             }
         }
 
-        btnNext.addEventListener('click', () => {
-            if (currentIndex >= bingoSequence.length) {
-                alert('¡Se acabaron todos los números de la secuencia!');
-                btnNext.disabled = true;
-                return;
-            }
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.04; // Gravedad
+                p.alpha -= p.decay;
 
-            btnNext.disabled = true;
-            playRevealSound();
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
 
-            const targetNumber = bingoSequence[currentIndex];
-            currentIndex++;
-
-            // Efecto visual de números aleatorios cambiando rápidamente durante los primeros 2 segundos
-            let shuffleTimer = setInterval(() => {
-                const randomTemp = Math.floor(Math.random() * 90) + 1;
-                numberDisplay.innerText = randomTemp;
-            }, 80);
-
-            // Reiniciar y aplicar la animación lenta de 2.5 segundos
-            numberDisplay.classList.remove('reveal-anim');
-            void numberDisplay.offsetWidth; 
-            numberDisplay.classList.add('reveal-anim');
-
-            // A los 2.5 segundos se detiene el cambio rápido y se muestra el número correcto
-            setTimeout(() => {
-                clearInterval(shuffleTimer);
-                numberDisplay.innerText = targetNumber;
-                calledNumbers.unshift(targetNumber);
-                updateHistory();
-                
-                if (currentIndex < bingoSequence.length) {
-                    btnNext.disabled = false;
+                if (p.alpha <= 0) {
+                    particles.splice(index, 1);
                 }
-            }, 2500);
-        });
-
-        function updateHistory() {
-            historyList.innerHTML = '';
-            calledNumbers.forEach(num => {
-                const badge = document.createElement('div');
-                badge.className = 'history-badge';
-                badge.innerText = num;
-                historyList.appendChild(badge);
             });
+            requestAnimationFrame(animateFireworks);
         }
     </script>
 </body>
