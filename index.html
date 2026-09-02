@@ -6,74 +6,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    background:#0a0a0a;color:#e8e8e8;
-    font-family:'Consolas','Monaco',monospace;
-    min-height:100vh;padding:20px;
-  }
+  body{background:#0a0a0a;color:#e8e8e8;font-family:'Consolas','Monaco',monospace;min-height:100vh;padding:20px}
   .wrap{max-width:1100px;margin:0 auto}
-  h1{
-    font-size:22px;margin-bottom:4px;
-    background:linear-gradient(90deg,#00ff9d,#00d4ff);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
+  h1{font-size:22px;margin-bottom:4px;background:linear-gradient(90deg,#00ff9d,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
   .sub{color:#666;font-size:12px;margin-bottom:24px}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:900px){.row{grid-template-columns:1fr}}
-  .box{
-    background:#111;border:1px solid #222;border-radius:8px;
-    padding:14px;display:flex;flex-direction:column;
-  }
+  .box{background:#111;border:1px solid #222;border-radius:8px;padding:14px;display:flex;flex-direction:column}
   label{font-size:12px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-  textarea{
-    background:#050505;color:#c9f7d8;border:1px solid #1a1a1a;
-    border-radius:6px;padding:12px;font-family:inherit;font-size:13px;
-    resize:vertical;min-height:340px;outline:none;width:100%;
-  }
+  textarea{background:#050505;color:#c9f7d8;border:1px solid #1a1a1a;border-radius:6px;padding:12px;font-family:inherit;font-size:13px;resize:vertical;min-height:340px;outline:none;width:100%}
   textarea:focus{border-color:#00ff9d}
   textarea.out{color:#88ccff;background:#050810}
   .btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-  button{
-    background:#00ff9d;color:#000;border:0;padding:10px 18px;
-    border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;
-    transition:all .15s;
-  }
+  button{background:#00ff9d;color:#000;border:0;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;transition:all .15s}
   button:hover{background:#00d887;transform:translateY(-1px)}
   button.sec{background:#222;color:#e8e8e8}
   button.sec:hover{background:#333}
   .opts{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;font-size:12px}
   .opts label{display:flex;align-items:center;gap:6px;color:#aaa;cursor:pointer;text-transform:none;letter-spacing:0}
   .opts input[type=checkbox]{accent-color:#00ff9d}
-  .status{
-    margin-top:12px;padding:8px 12px;border-radius:6px;font-size:12px;
-    background:#111;border:1px solid #222;color:#888;min-height:28px;
-  }
+  .status{margin-top:12px;padding:8px 12px;border-radius:6px;font-size:12px;background:#111;border:1px solid #222;color:#888;min-height:28px}
   .status.ok{color:#00ff9d;border-color:#00ff9d33}
   .status.err{color:#ff5566;border-color:#ff556633}
-  code{background:#000;padding:2px 6px;border-radius:3px;color:#ffcc00}
-  
-  .final-box{
-    margin-top:16px;background:#0a1a0a;border:1px solid #00ff9d33;
-    border-radius:8px;padding:14px;
-  }
+  .final-box{margin-top:16px;background:#0a1a0a;border:1px solid #00ff9d33;border-radius:8px;padding:14px}
   .final-box label{color:#00ff9d}
-  .url-input{
-    background:#050505;color:#fff;border:1px solid #1a1a1a;
-    border-radius:6px;padding:10px;font-family:inherit;font-size:13px;
-    outline:none;width:100%;margin-bottom:10px;
-  }
+  .url-input{background:#050505;color:#fff;border:1px solid #1a1a1a;border-radius:6px;padding:10px;font-family:inherit;font-size:13px;outline:none;width:100%;margin-bottom:10px}
   .url-input:focus{border-color:#00ff9d}
-  .final-output{
-    background:#000;color:#00ff9d;border:1px solid #00ff9d33;
-    border-radius:6px;padding:12px;font-family:inherit;font-size:13px;
-    min-height:40px;word-break:break-all;
-  }
+  .final-output{background:#000;color:#00ff9d;border:1px solid #00ff9d33;border-radius:6px;padding:12px;font-family:inherit;font-size:13px;min-height:40px;word-break:break-all}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>xFuxk Obfuscator</h1>
-  <div class="sub">Ofusca tu script → súbelo a GitHub → obtén el loadstring final</div>
+  <div class="sub">Ofusca tu script → súbelo a hosting → obtén el loadstring final</div>
 
   <div class="opts">
     <label><input type="checkbox" id="opt-junk" checked> Código basura</label>
@@ -87,7 +52,7 @@
       <textarea id="src" placeholder="print('hello world')"></textarea>
     </div>
     <div class="box">
-      <label>Script ofuscado (súbelo a GitHub)</label>
+      <label>Script ofuscado (súbelo a tu hosting)</label>
       <textarea id="out" class="out" placeholder="El resultado aparecerá aquí..." readonly></textarea>
     </div>
   </div>
@@ -100,7 +65,7 @@
 
   <div class="final-box">
     <label>Pega aquí la URL donde subiste el script ofuscado:</label>
-    <input type="text" id="url-input" class="url-input" placeholder="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/script.lua">
+    <input type="text" id="url-input" class="url-input" placeholder="https://txzp.github.io/test-web/script.lua">
     <button onclick="genLoadstring()">⚡ Generar Loadstring Final</button>
     <div class="final-output" id="final-output">Esperando URL...</div>
     <button class="sec" onclick="copyFinal()" style="margin-top:10px">📋 Copiar loadstring</button>
@@ -115,7 +80,7 @@ const setStatus = (m, cls='') => {
   const s = $('status'); s.textContent = m; s.className = 'status ' + cls;
 };
 
-function randKey(n=24){
+function randKey(n=32){
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let k=''; for(let i=0;i<n;i++) k+=chars[Math.floor(Math.random()*chars.length)];
   return k;
@@ -151,7 +116,7 @@ function randName(n){
   return s;
 }
 
-function splitChunks(s, size=800){
+function splitChunks(s, size=600){
   if(s.length<=size) return [s];
   const chunks=[];
   for(let i=0;i<s.length;i+=size) chunks.push(s.substr(i,size));
@@ -164,9 +129,9 @@ function luaEscape(s){
 
 function genJunk(){
   const lines=[];
-  const n=3+Math.floor(Math.random()*3);
+  const n=5+Math.floor(Math.random()*5);
   for(let i=0;i<n;i++){
-    lines.push(`local ${randName(8)} = ${Math.floor(Math.random()*999999)}`);
+    lines.push(`local ${randName(10)} = ${Math.floor(Math.random()*999999)}`);
   }
   return lines.join('\n');
 }
@@ -180,21 +145,27 @@ function doObf(){
     const optSplit = $('opt-split').checked;
     const optAlias = $('opt-alias').checked;
 
-    const key = randKey(24);
+    const key = randKey(32);
     const xored = xorEncode(src, key);
     const b64 = b64enc(xored);
 
-    const fnD   = optAlias ? randName(7) : 'd';
-    const fnB   = optAlias ? randName(7) : 'decode';
-    const vB64  = optAlias ? randName(7) : 'b64';
-    const vData = optAlias ? randName(7) : 'data';
-    const vOut  = optAlias ? randName(7) : 'out';
-    const vKey  = optAlias ? randName(7) : 'k';
-    const vS    = optAlias ? randName(7) : 's';
+    const fnD   = randName(8);
+    const fnB   = randName(8);
+    const vB64  = randName(8);
+    const vData = randName(8);
+    const vOut  = randName(8);
+    const vKey  = randName(8);
+    const vS    = randName(8);
+    const vI    = randName(8);
+    const vJ    = randName(8);
+    const vA    = randName(8);
+    const vB    = randName(8);
+    const vC    = randName(8);
+    const vDD   = randName(8);
 
     let dataLiteral;
     if(optSplit){
-      const chunks = splitChunks(b64, 800);
+      const chunks = splitChunks(b64, 600);
       dataLiteral = chunks.map(c => `"${luaEscape(c)}"`).join('..');
     } else {
       dataLiteral = `"${luaEscape(b64)}"`;
@@ -202,40 +173,40 @@ function doObf(){
 
     let routine = `local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"\n`;
     routine += `local function ${fnB}(${vS})\n`;
-    routine += `  ${vS}=${vS}:gsub("=","")\n`;
-    routine += `  local ${vOut}=""\n`;
-    routine += `  for ${randName(3)}=1,#${vS},4 do\n`;
-    routine += `    local a,b,c,dd=${vB64}:find(${vS}:sub(${randName(3)},${randName(3)})),${vB64}:find(${vS}:sub(${randName(3)}+1,${randName(3)}+1)),${vB64}:find(${vS}:sub(${randName(3)}+2,${randName(3)}+2)),${vB64}:find(${vS}:sub(${randName(3)}+3,${randName(3)}+3))\n`;
-    routine += `    if a and b then\n`;
-    routine += `      ${vOut}=${vOut}..string.char(((a-1)*4)+math.floor((b-1)/16))\n`;
-    routine += `      if c then ${vOut}=${vOut}..string.char(((b-1)%16)*16+math.floor((c-1)/4)) end\n`;
-    routine += `      if dd then ${vOut}=${vOut}..string.char(((c-1)%4)*64+(dd-1)) end\n`;
-    routine += `    end\n`;
-    routine += `  end\n`;
-    routine += `  return ${vOut}\n`;
+    routine += `${vS}=${vS}:gsub("=","")\n`;
+    routine += `local ${vOut}=""\n`;
+    routine += `for ${vI}=1,#${vS},4 do\n`;
+    routine += `local ${vA},${vB},${vC},${vDD}=${vB64}:find(${vS}:sub(${vI},${vI})),${vB64}:find(${vS}:sub(${vI}+1,${vI}+1)),${vB64}:find(${vS}:sub(${vI}+2,${vI}+2)),${vB64}:find(${vS}:sub(${vI}+3,${vI}+3))\n`;
+    routine += `if ${vA} and ${vB} then\n`;
+    routine += `${vOut}=${vOut}..string.char(((${vA}-1)*4)+math.floor((${vB}-1)/16))\n`;
+    routine += `if ${vC} then ${vOut}=${vOut}..string.char(((${vB}-1)%16)*16+math.floor((${vC}-1)/4)) end\n`;
+    routine += `if ${vDD} then ${vOut}=${vOut}..string.char(((${vC}-1)%4)*64+(${vDD}-1)) end\n`;
+    routine += `end\n`;
+    routine += `end\n`;
+    routine += `return ${vOut}\n`;
     routine += `end\n`;
     routine += `local function ${fnD}(${vS},${vKey})\n`;
-    routine += `  local ${vData}=${fnB}(${vS})\n`;
-    routine += `  local ${vOut}={}\n`;
-    routine += `  for ${randName(3)}=1,#${vData} do\n`;
-    routine += `    local byte=string.byte(${vData},${randName(3)})\n`;
-    routine += `    local kb=string.byte(${vKey},((${randName(3)}-1)%#${vKey})+1)\n`;
-    routine += `    local r,p,c=0,1,0\n`;
-    routine += `    local aa,bb=byte,kb\n`;
-    routine += `    while aa>0 and bb>0 do\n`;
-    routine += `      local ra,rb=aa%2,bb%2\n`;
-    routine += `      if ra~=rb then c=c+p end\n`;
-    routine += `      aa,bb,p=(aa-ra)/2,(bb-rb)/2,p*2\n`;
-    routine += `    end\n`;
-    routine += `    if aa<bb then aa=bb end\n`;
-    routine += `    while aa>0 do\n`;
-    routine += `      local ra=aa%2\n`;
-    routine += `      if ra>0 then c=c+p end\n`;
-    routine += `      aa,p=(aa-ra)/2,p*2\n`;
-    routine += `    end\n`;
-    routine += `    ${vOut}[${randName(3)}]=string.char(c)\n`;
-    routine += `  end\n`;
-    routine += `  return table.concat(${vOut})\n`;
+    routine += `local ${vData}=${fnB}(${vS})\n`;
+    routine += `local ${vOut}={}\n`;
+    routine += `for ${vI}=1,#${vData} do\n`;
+    routine += `local byte=string.byte(${vData},${vI})\n`;
+    routine += `local kb=string.byte(${vKey},((${vI}-1)%#${vKey})+1)\n`;
+    routine += `local r,p,c=0,1,0\n`;
+    routine += `local aa,bb=byte,kb\n`;
+    routine += `while aa>0 and bb>0 do\n`;
+    routine += `local ra,rb=aa%2,bb%2\n`;
+    routine += `if ra~=rb then c=c+p end\n`;
+    routine += `aa,bb,p=(aa-ra)/2,(bb-rb)/2,p*2\n`;
+    routine += `end\n`;
+    routine += `if aa<bb then aa=bb end\n`;
+    routine += `while aa>0 do\n`;
+    routine += `local ra=aa%2\n`;
+    routine += `if ra>0 then c=c+p end\n`;
+    routine += `aa,p=(aa-ra)/2,p*2\n`;
+    routine += `end\n`;
+    routine += `${vOut}[${vI}]=string.char(c)\n`;
+    routine += `end\n`;
+    routine += `return table.concat(${vOut})\n`;
     routine += `end\n`;
 
     const keyLiteral = `"${luaEscape(key)}"`;
@@ -246,7 +217,7 @@ function doObf(){
     output += `loadstring(${fnD}(${dataLiteral},${keyLiteral}))()`;
 
     $('out').value = output;
-    setStatus(`✅ Ofuscado (${output.length} chars). Súbelo a GitHub y pega la URL abajo.`, 'ok');
+    setStatus(`✅ Ofuscado (${output.length} chars). Súbelo a tu hosting y pega la URL abajo.`, 'ok');
   }catch(e){
     setStatus('Error: ' + e.message, 'err');
   }
@@ -256,7 +227,7 @@ function genLoadstring(){
   const url = $('url-input').value.trim();
   if(!url){ setStatus('Pega la URL del script ofuscado.', 'err'); return; }
   
-  const loadstring = `loadstring(game:HttpGet('${url}'))()`;
+  const loadstring = `loadstring(game:HttpGet("${url}"))()`;
   $('final-output').textContent = loadstring;
   setStatus('✅ Loadstring generado. Cópialo y úsalo en tu executor.', 'ok');
 }
