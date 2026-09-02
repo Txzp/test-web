@@ -1,651 +1,245 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Aim Trainer Pro - Ultimate Edition</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-        body {
-            background-color: #0b0b0e;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            cursor: none;
-        }
-        #menu-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 11, 14, 0.97);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            gap: 20px;
-            text-align: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        h1 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            color: #ff3366;
-            text-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
-        }
-        .stats-panel {
-            background: rgba(25, 25, 35, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 25px;
-            border-radius: 12px;
-            display: flex;
-            gap: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-        }
-        .stat-item {
-            text-align: center;
-        }
-        .stat-item span {
-            display: block;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #00f2fe;
-        }
-        .stat-item label {
-            font-size: 0.8rem;
-            color: #888;
-        }
-        .config-box {
-            background: rgba(20, 20, 28, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 25px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 320px;
-            text-align: left;
-        }
-        .config-box label {
-            font-size: 0.9rem;
-            color: #ccc;
-            display: flex;
-            justify-content: space-between;
-        }
-        .config-box input[type="range"] {
-            width: 100%;
-            accent-color: #ff3366;
-            cursor: pointer;
-        }
-        .toggle-btn {
-            background: #2a2a3f;
-            border: 1px solid #444;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        .toggle-btn.active {
-            background: #ff3366;
-            border-color: #ff3366;
-            box-shadow: 0 0 10px rgba(255,51,102,0.5);
-        }
-        .modes-container {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 800px;
-        }
-        .btn-mode {
-            background: linear-gradient(135deg, #1f1f2e 0%, #2a2a3f 100%);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 180px;
-        }
-        .btn-mode span {
-            font-size: 0.75rem;
-            color: #aaa;
-            font-weight: normal;
-        }
-        .btn-mode:hover {
-            transform: translateY(-2px);
-            border-color: #ff3366;
-            box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3);
-        }
-        #ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-            pointer-events: none;
-            display: none;
-        }
-        .stat-box {
-            background: rgba(25, 25, 35, 0.85);
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .stat-box span {
-            color: #ff3366;
-        }
-        #btn-exit {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 51, 102, 0.2);
-            border: 1px solid #ff3366;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 10;
-            display: none;
-            transition: background 0.2s;
-        }
-        #btn-exit:hover {
-            background: #ff3366;
-        }
-        #feedback-text {
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2rem;
-            font-weight: 900;
-            color: #00f2fe;
-            text-shadow: 0 0 15px rgba(0,242,254,0.6);
-            pointer-events: none;
-            display: none;
-            z-index: 15;
-            animation: fadeUp 0.6s ease forwards;
-        }
-        @keyframes fadeUp {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
-            100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2); }
-        }
-        canvas {
-            display: block;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>xFuxk Obfuscator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#0a0a0a;color:#e8e8e8;
+    font-family:'Consolas','Monaco',monospace;
+    min-height:100vh;padding:20px;
+  }
+  .wrap{max-width:1100px;margin:0 auto}
+  h1{
+    font-size:22px;margin-bottom:4px;
+    background:linear-gradient(90deg,#00ff9d,#00d4ff);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .sub{color:#666;font-size:12px;margin-bottom:24px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.row{grid-template-columns:1fr}}
+  .box{
+    background:#111;border:1px solid #222;border-radius:8px;
+    padding:14px;display:flex;flex-direction:column;
+  }
+  label{font-size:12px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  textarea{
+    background:#050505;color:#c9f7d8;border:1px solid #1a1a1a;
+    border-radius:6px;padding:12px;font-family:inherit;font-size:13px;
+    resize:vertical;min-height:340px;outline:none;width:100%;
+  }
+  textarea:focus{border-color:#00ff9d}
+  textarea.out{color:#88ccff;background:#050810}
+  .btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  button{
+    background:#00ff9d;color:#000;border:0;padding:10px 18px;
+    border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;
+    transition:all .15s;
+  }
+  button:hover{background:#00d887;transform:translateY(-1px)}
+  button.sec{background:#222;color:#e8e8e8}
+  button.sec:hover{background:#333}
+  .opts{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;font-size:12px}
+  .opts label{display:flex;align-items:center;gap:6px;color:#aaa;cursor:pointer;text-transform:none;letter-spacing:0}
+  .opts input[type=checkbox]{accent-color:#00ff9d}
+  .status{
+    margin-top:12px;padding:8px 12px;border-radius:6px;font-size:12px;
+    background:#111;border:1px solid #222;color:#888;min-height:28px;
+  }
+  .status.ok{color:#00ff9d;border-color:#00ff9d33}
+  .status.err{color:#ff5566;border-color:#ff556633}
+  code{background:#000;padding:2px 6px;border-radius:3px;color:#ffcc00}
+</style>
 </head>
 <body>
+<div class="wrap">
+  <h1>xFuxk Obfuscator</h1>
+  <div class="sub">Pega tu código Lua → obtén un loadstring ofuscado (XOR + Base64). 100% cliente-side.</div>
 
-    <div id="feedback-text">HEADSHOT!</div>
+  <div class="opts">
+    <label><input type="checkbox" id="opt-junk" checked> Insertar código basura</label>
+    <label><input type="checkbox" id="opt-split" checked> Dividir el string en chunks</label>
+    <label><input type="checkbox" id="opt-alias" checked> Renombrar variables</label>
+  </div>
 
-    <!-- MENÚ PRINCIPAL Y ESTADÍSTICAS (Data Save corregido) -->
-    <div id="menu-screen">
-        <h1>ROBLOX AIM TRAINER PRO</h1>
-        
-        <div class="stats-panel">
-            <div class="stat-item">
-                <span id="stat-best">0</span>
-                <label>Mejor Puntuación</label>
-            </div>
-            <div class="stat-item">
-                <span id="stat-hits">0</span>
-                <label>Aciertos Totales</label>
-            </div>
-            <div class="stat-item">
-                <span id="stat-acc">100%</span>
-                <label>Precisión Global</label>
-            </div>
-        </div>
-
-        <!-- Panel de Configuración para Modo Roblox Character -->
-        <div class="config-box">
-            <label>Velocidad Roblox: <span id="speed-val">4</span>px</label>
-            <input type="range" id="roblox-speed" min="1" max="12" value="4" oninput="updateConfigLabels()">
-            
-            <label>Hitbox Head Size: <span id="head-val">25</span>px</label>
-            <input type="range" id="roblox-head-size" min="15" max="45" value="25" oninput="updateConfigLabels()">
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
-                <span style="font-size:0.9rem; color:#ccc;">Aim Assistant:</span>
-                <button id="aim-assist-toggle" class="toggle-btn" onclick="toggleAimAssist()">OFF</button>
-            </div>
-        </div>
-
-        <div class="modes-container">
-            <button class="btn-mode" onclick="startGame('roblox')">
-                Roblox Character (Izq-Der)
-                <span>Head, Torso con hitbox personalizable</span>
-            </button>
-            <button class="btn-mode" onclick="startGame('classic')">
-                Modo Clásico (30s)
-                <span>Bolitas móviles con tiempo</span>
-            </button>
-            <button class="btn-mode" onclick="startGame('infinite')">
-                Práctica Infinita
-                <span>Sin límite de tiempo</span>
-            </button>
-            <button class="btn-mode" onclick="startGame('flick')">
-                Flick Estático
-                <span>Aparecen y desaparecen rápido</span>
-            </button>
-        </div>
+  <div class="row">
+    <div class="box">
+      <label>Código Lua original</label>
+      <textarea id="src" placeholder="print('hello world')"></textarea>
     </div>
-
-    <!-- HUD DE JUEGO -->
-    <div id="ui">
-        <div class="stat-box">Puntuación: <span id="score">0</span></div>
-        <div class="stat-box">Precisión: <span id="accuracy">100</span>%</div>
-        <div class="stat-box" id="timer-box">Tiempo: <span id="timer">30</span>s</div>
+    <div class="box">
+      <label>Salida (loadstring ofuscado)</label>
+      <textarea id="out" class="out" placeholder="El resultado aparecerá aquí..." readonly></textarea>
     </div>
+  </div>
 
-    <button id="btn-exit" onclick="returnToMenu()">Salir al Menú</button>
+  <div class="btns">
+    <button onclick="doObf()">🔒 Obfuscate</button>
+    <button class="sec" onclick="copyOut()">📋 Copiar resultado</button>
+    <button class="sec" onclick="document.getElementById('src').value='';document.getElementById('out').value='';setStatus('')">🧹 Limpiar</button>
+  </div>
 
-    <canvas id="gameCanvas"></canvas>
+  <div class="status" id="status">Listo.</div>
+</div>
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+<script>
+const $ = id => document.getElementById(id);
+const setStatus = (m, cls='') => {
+  const s = $('status'); s.textContent = m; s.className = 'status ' + cls;
+};
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+function randKey(n=24){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let k=''; for(let i=0;i<n;i++) k+=chars[Math.floor(Math.random()*chars.length)];
+  return k;
+}
 
-        let gameRunning = false;
-        let currentMode = 'classic';
-        let score = 0;
-        let totalClicks = 0;
-        let hits = 0;
-        let timeLeft = 30;
-        let timerInterval;
+function b64enc(str){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  let out='', i=0;
+  while(i<str.length){
+    const a=str.charCodeAt(i++), b=str.charCodeAt(i++), c=str.charCodeAt(i++);
+    const triple = ((a<<16)|(b<<8)|c) >>> 0;
+    out += chars[(triple>>18)&63] + chars[(triple>>12)&63];
+    if(i-2 < str.length) out += chars[(triple>>6)&63]; else { out += '='; break; }
+    if(i-1 < str.length) out += chars[triple&63]; else { out += '='; break; }
+  }
+  return out;
+}
 
-        let targets = [];
-        let tracers = [];
-        let mouseX = canvas.width / 2;
-        let mouseY = canvas.height / 2;
+function xorEncode(str, key){
+  const bytes=[];
+  for(let i=0;i<str.length;i++){
+    const kb = key.charCodeAt(i % key.length);
+    bytes.push(str.charCodeAt(i) ^ kb);
+  }
+  // Convertimos bytes a string raw
+  return String.fromCharCode.apply(null, bytes);
+}
 
-        // Configuración Modo Roblox
-        let robloxConfig = {
-            speed: 4,
-            headRadius: 25,
-            aimAssist: false
-        };
+function randName(n){
+  const first='abcdefghijklmnopqrstuvwxyz';
+  const rest='abcdefghijklmnopqrstuvwxyz0123456789_';
+  let s=first[Math.floor(Math.random()*first.length)];
+  for(let i=1;i<n;i++) s+=rest[Math.floor(Math.random()*rest.length)];
+  return s;
+}
 
-        // Objeto personaje Roblox en movimiento lateral
-        let robloxChar = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            dir: 1
-        };
+function splitChunks(s, size=800){
+  if(s.length<=size) return [s];
+  const chunks=[];
+  for(let i=0;i<s.length;i+=size) chunks.push(s.substr(i,size));
+  return chunks;
+}
 
-        // Sistema Data Save persistente y progresivo con localStorage corregido
-        let stats = JSON.parse(localStorage.getItem('roblox_aim_stats')) || { best: 0, hits: 0, totalClicks: 0 };
-        updateMenuStats();
+function luaEscape(s){
+  return s.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'');
+}
 
-        function updateMenuStats() {
-            document.getElementById('stat-best').textContent = stats.best;
-            document.getElementById('stat-hits').textContent = stats.hits;
-            const globalAcc = stats.totalClicks > 0 ? Math.round((stats.hits / stats.totalClicks) * 100) : 100;
-            document.getElementById('stat-acc').textContent = globalAcc + '%';
-        }
+function genJunk(){
+  // Genera variables basura que no afectan ejecución
+  const lines=[];
+  const n=3+Math.floor(Math.random()*3);
+  for(let i=0;i<n;i++){
+    lines.push(`local ${randName(8)} = ${Math.floor(Math.random()*999999)}`);
+  }
+  return lines.join('\n');
+}
 
-        function saveStatsProgressive(scoredHit, isClick) {
-            if (isClick) stats.totalClicks++;
-            if (scoredHit) stats.hits++;
-            if (score > stats.best) stats.best = score;
-            localStorage.setItem('roblox_aim_stats', JSON.stringify(stats));
-            updateMenuStats();
-        }
+function doObf(){
+  const src = $('src').value;
+  if(!src.trim()){ setStatus('Pega código primero.', 'err'); return; }
 
-        function updateConfigLabels() {
-            robloxConfig.speed = parseInt(document.getElementById('roblox-speed').value);
-            robloxConfig.headRadius = parseInt(document.getElementById('roblox-head-size').value);
-            document.getElementById('speed-val').textContent = robloxConfig.speed;
-            document.getElementById('head-val').textContent = robloxConfig.headRadius;
-        }
+  try{
+    const optJunk = $('opt-junk').checked;
+    const optSplit = $('opt-split').checked;
+    const optAlias = $('opt-alias').checked;
 
-        function toggleAimAssist() {
-            robloxConfig.aimAssist = !robloxConfig.aimAssist;
-            const btn = document.getElementById('aim-assist-toggle');
-            if (robloxConfig.aimAssist) {
-                btn.classList.add('active');
-                btn.textContent = 'ON';
-            } else {
-                btn.classList.remove('active');
-                btn.textContent = 'OFF';
-            }
-        }
+    const key = randKey(24);
+    const xored = xorEncode(src, key);
+    const b64 = b64enc(xored);
 
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
+    // Nombres
+    const fnD   = optAlias ? randName(7) : 'd';
+    const fnB   = optAlias ? randName(7) : 'decode';
+    const vB64  = optAlias ? randName(7) : 'b64';
+    const vData = optAlias ? randName(7) : 'data';
+    const vOut  = optAlias ? randName(7) : 'out';
+    const vKey  = optAlias ? randName(7) : 'k';
+    const vS    = optAlias ? randName(7) : 's';
 
-        window.addEventListener('mousedown', (e) => {
-            if (!gameRunning) return;
-            totalClicks++;
+    // Construir string ofuscado (con o sin split)
+    let dataLiteral;
+    if(optSplit){
+      const chunks = splitChunks(b64, 800);
+      dataLiteral = chunks.map(c => `"${luaEscape(c)}"`).join('..');
+    } else {
+      dataLiteral = `"${luaEscape(b64)}"`;
+    }
 
-            // Rayo Taser rojo desde la parte inferior central
-            tracers.push({
-                startX: canvas.width / 2,
-                startY: canvas.height,
-                endX: e.clientX,
-                endY: e.clientY,
-                alpha: 1
-            });
+    // Rutina de desobfuscación en Lua
+    let routine = `local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"\n`;
+    routine += `local function ${fnB}(${vS})\n`;
+    routine += `  ${vS}=${vS}:gsub("=","")\n`;
+    routine += `  local ${vOut}=""\n`;
+    routine += `  for ${randName(3)}=1,#${vS},4 do\n`;
+    routine += `    local a,b,c,dd=${vB64}:find(${vS}:sub(${randName(3)},${randName(3)})),${vB64}:find(${vS}:sub(${randName(3)}+1,${randName(3)}+1)),${vB64}:find(${vS}:sub(${randName(3)}+2,${randName(3)}+2)),${vB64}:find(${vS}:sub(${randName(3)}+3,${randName(3)}+3))\n`;
+    routine += `    if a and b then\n`;
+    routine += `      ${vOut}=${vOut}..string.char(((a-1)*4)+math.floor((b-1)/16))\n`;
+    routine += `      if c then ${vOut}=${vOut}..string.char(((b-1)%16)*16+math.floor((c-1)/4)) end\n`;
+    routine += `      if dd then ${vOut}=${vOut}..string.char(((c-1)%4)*64+(dd-1)) end\n`;
+    routine += `    end\n`;
+    routine += `  end\n`;
+    routine += `  return ${vOut}\n`;
+    routine += `end\n`;
+    routine += `local function ${fnD}(${vS},${vKey})\n`;
+    routine += `  local ${vData}=${fnB}(${vS})\n`;
+    routine += `  local ${vOut}={}\n`;
+    routine += `  for ${randName(3)}=1,#${vData} do\n`;
+    routine += `    local byte=string.byte(${vData},${randName(3)})\n`;
+    routine += `    local kb=string.byte(${vKey},((${randName(3)}-1)%#${vKey})+1)\n`;
+    routine += `    local r,p,c=0,1,0\n`;
+    routine += `    local aa,bb=byte,kb\n`;
+    routine += `    while aa>0 and bb>0 do\n`;
+    routine += `      local ra,rb=aa%2,bb%2\n`;
+    routine += `      if ra~=rb then c=c+p end\n`;
+    routine += `      aa,bb,p=(aa-ra)/2,(bb-rb)/2,p*2\n`;
+    routine += `    end\n`;
+    routine += `    if aa<bb then aa=bb end\n`;
+    routine += `    while aa>0 do\n`;
+    routine += `      local ra=aa%2\n`;
+    routine += `      if ra>0 then c=c+p end\n`;
+    routine += `      aa,p=(aa-ra)/2,p*2\n`;
+    routine += `    end\n`;
+    routine += `    ${vOut}[${randName(3)}]=string.char(c)\n`;
+    routine += `  end\n`;
+    routine += `  return table.concat(${vOut})\n`;
+    routine += `end\n`;
 
-            let hitRegistered = false;
+    const keyLiteral = `"${luaEscape(key)}"`;
 
-            if (currentMode === 'roblox') {
-                // Coordenadas relativas de las partes del personaje Roblox
-                let headX = robloxChar.x;
-                let headY = robloxChar.y - 70;
-                let torsoX = robloxChar.x;
-                let torsoY = robloxChar.y;
-                let leftArmX = robloxChar.x - 35;
-                let leftArmY = robloxChar.y;
-                let rightArmX = robloxChar.x + 35;
-                let rightArmY = robloxChar.y;
-                let leftLegX = robloxChar.x - 15;
-                let leftLegY = robloxChar.y + 75;
-                let rightLegX = robloxChar.x + 15;
-                let rightLegY = robloxChar.y + 75;
+    let output = '';
+    if(optJunk) output += genJunk() + '\n';
+    output += routine;
+    output += `loadstring(${fnD}(${dataLiteral},${keyLiteral}))()`;
 
-                let clickX = e.clientX;
-                let clickY = e.clientY;
+    $('out').value = output;
+    setStatus(`✅ Ofuscado (${output.length} chars). Key: ${key}`, 'ok');
+  }catch(e){
+    setStatus('Error: ' + e.message, 'err');
+  }
+}
 
-                // Aim Assistant: atracción magnética si está activado
-                if (robloxConfig.aimAssist) {
-                    let distToHead = Math.hypot(clickX - headX, clickY - headY);
-                    let distToTorso = Math.hypot(clickX - torsoX, clickY - torsoY);
-                    if (distToHead < 80) { clickX = headX; clickY = headY; }
-                    else if (distToTorso < 100) { clickX = torsoX; clickY = torsoY; }
-                }
-
-                // Comprobar Headshot
-                let distHead = Math.hypot(clickX - headX, clickY - headY);
-                if (distHead <= robloxConfig.headRadius) {
-                    hits++;
-                    score += 25;
-                    hitRegistered = true;
-                    showFeedback("¡HEADSHOT! (+25)", "#ff3366");
-                } 
-                // Comprobar Torso (caja de 50x70)
-                else if (clickX >= torsoX - 25 && clickX <= torsoX + 25 && clickY >= torsoY - 35 && clickY <= torsoY + 35) {
-                    hits++;
-                    score += 10;
-                    hitRegistered = true;
-                    showFeedback("¡TORSO! (+10)", "#00f2fe");
-                }
-                // Brazos o Piernas
-                else if (
-                    (Math.hypot(clickX - leftArmX, clickY - leftArmY) < 20) ||
-                    (Math.hypot(clickX - rightArmX, clickY - rightArmY) < 20) ||
-                    (Math.hypot(clickX - leftLegX, clickY - leftLegY) < 20) ||
-                    (Math.hypot(clickX - rightLegX, clickY - rightLegY) < 20)
-                ) {
-                    hits++;
-                    score += 5;
-                    hitRegistered = true;
-                    showFeedback("¡EXTREMIDAD! (+5)", "#ffaa00");
-                }
-
-                saveStatsProgressive(hitRegistered, true);
-
-            } else {
-                // Modos normales de bolitas
-                for (let i = targets.length - 1; i >= 0; i--) {
-                    const t = targets[i];
-                    const dist = Math.hypot(e.clientX - t.x, e.clientY - t.y);
-                    if (dist <= t.radius) {
-                        hits++;
-                        score += 10;
-                        hitRegistered = true;
-                        targets.splice(i, 1);
-                        spawnTarget();
-                        break;
-                    }
-                }
-                saveStatsProgressive(hitRegistered, true);
-            }
-
-            updateUI();
-        });
-
-        function showFeedback(text, color) {
-            const fb = document.getElementById('feedback-text');
-            fb.textContent = text;
-            fb.style.color = color;
-            fb.style.textShadow = `0 0 15px ${color}`;
-            fb.style.display = 'block';
-            setTimeout(() => { fb.style.display = 'none'; }, 500);
-        }
-
-        function spawnTarget() {
-            if (currentMode === 'roblox') return;
-            const radius = currentMode === 'flick' ? 22 : (Math.random() * 15 + 16);
-            const x = Math.random() * (canvas.width - 150) + 75;
-            const y = Math.random() * (canvas.height - 250) + 100;
-            
-            let vx = 0, vy = 0;
-            if (currentMode !== 'flick') {
-                const speed = Math.random() * 2.5 + 1.5;
-                const angle = Math.random() * Math.PI * 2;
-                vx = Math.cos(angle) * speed;
-                vy = Math.sin(angle) * speed;
-            }
-
-            targets.push({
-                x: x, y: y, radius: radius, vx: vx, vy: vy,
-                alpha: 1, maxLife: currentMode === 'flick' ? 90 : 180, life: currentMode === 'flick' ? 90 : 180
-            });
-        }
-
-        function startGame(mode) {
-            currentMode = mode;
-            document.getElementById('menu-screen').style.display = 'none';
-            document.getElementById('ui').style.display = 'flex';
-            document.getElementById('btn-exit').style.display = 'block';
-
-            gameRunning = true;
-            score = 0;
-            totalClicks = 0;
-            hits = 0;
-            targets = [];
-            tracers = [];
-
-            if (mode === 'roblox') {
-                robloxChar.x = canvas.width / 2;
-                robloxChar.y = canvas.height / 2;
-                robloxChar.dir = Math.random() > 0.5 ? 1 : -1;
-                document.getElementById('timer-box').style.display = 'none';
-            } else if (mode === 'classic') {
-                timeLeft = 30;
-                document.getElementById('timer-box').style.display = 'block';
-                clearInterval(timerInterval);
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    document.getElementById('timer').textContent = timeLeft;
-                    if (timeLeft <= 0) endGame();
-                }, 1000);
-                for (let i = 0; i < 4; i++) spawnTarget();
-            } else {
-                document.getElementById('timer-box').style.display = 'none';
-                for (let i = 0; i < 4; i++) spawnTarget();
-            }
-
-            loop();
-        }
-
-        function endGame() {
-            gameRunning = false;
-            clearInterval(timerInterval);
-            returnToMenu();
-        }
-
-        function returnToMenu() {
-            gameRunning = false;
-            clearInterval(timerInterval);
-            document.getElementById('menu-screen').style.display = 'flex';
-            document.getElementById('ui').style.display = 'none';
-            document.getElementById('btn-exit').style.display = 'none';
-            updateMenuStats();
-        }
-
-        function updateUI() {
-            document.getElementById('score').textContent = score;
-            const acc = totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 100;
-            document.getElementById('accuracy').textContent = acc;
-        }
-
-        function loop() {
-            if (!gameRunning) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (currentMode === 'roblox') {
-                // Mover personaje Roblox de izquierda a derecha
-                robloxChar.x += robloxConfig.speed * robloxChar.dir;
-                if (robloxChar.x > canvas.width - 100) robloxChar.dir = -1;
-                if (robloxChar.x < 100) robloxChar.dir = 1;
-
-                let rx = robloxChar.x;
-                let ry = robloxChar.y;
-
-                // Dibujar personaje estilo Roblox (Bloques estructurados)
-                ctx.save();
-                // Sombra general
-                ctx.shadowColor = '#ff3366';
-                ctx.shadowBlur = 10;
-
-                // Cabeza (Head)
-                ctx.beginPath();
-                ctx.arc(rx, ry - 70, robloxConfig.headRadius, 0, Math.PI * 2);
-                ctx.fillStyle = '#ff3366';
-                ctx.fill();
-                ctx.lineWidth = 3;
-                ctx.strokeStyle = '#ffffff';
-                ctx.stroke();
-
-                // Torso
-                ctx.fillStyle = '#2575fc';
-                ctx.fillRect(rx - 25, ry - 35, 50, 70);
-                ctx.strokeRect(rx - 25, ry - 35, 50, 70);
-
-                // Brazos
-                ctx.fillStyle = '#ffaa00';
-                ctx.fillRect(rx - 45, ry - 35, 18, 60);
-                ctx.strokeRect(rx - 45, ry - 35, 18, 60);
-                ctx.fillRect(rx + 27, ry - 35, 18, 60);
-                ctx.strokeRect(rx + 27, ry - 35, 18, 60);
-
-                // Piernas
-                ctx.fillStyle = '#22bb33';
-                ctx.fillRect(rx - 23, ry + 36, 20, 70);
-                ctx.strokeRect(rx - 23, ry + 36, 20, 70);
-                ctx.fillRect(rx + 3, ry + 36, 20, 70);
-                ctx.strokeRect(rx + 3, ry + 36, 20, 70);
-
-                ctx.restore();
-
-            } else {
-                // Renderizar y actualizar bolitas para otros modos
-                for (let i = targets.length - 1; i >= 0; i--) {
-                    let t = targets[i];
-                    t.x += t.vx;
-                    t.y += t.vy;
-
-                    if (currentMode !== 'flick') {
-                        if (t.x - t.radius < 0 || t.x + t.radius > canvas.width) t.vx *= -1;
-                        if (t.y - t.radius < 70 || t.y + t.radius > canvas.height) t.vy *= -1;
-                    }
-
-                    t.life--;
-                    if (t.life <= 0) {
-                        targets.splice(i, 1);
-                        spawnTarget();
-                        continue;
-                    }
-
-                    t.alpha = t.life / t.maxLife;
-
-                    ctx.save();
-                    ctx.globalAlpha = t.alpha;
-                    ctx.beginPath();
-                    ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = currentMode === 'flick' ? '#ff3366' : '#00f2fe';
-                    ctx.shadowColor = currentMode === 'flick' ? '#ff3366' : '#00f2fe';
-                    ctx.shadowBlur = 15;
-                    ctx.fill();
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.stroke();
-                    ctx.restore();
-                }
-
-                while (targets.length < 4) {
-                    spawnTarget();
-                }
-            }
-
-            // Rayo Taser rojo con desvanecimiento
-            for (let i = tracers.length - 1; i >= 0; i--) {
-                let tr = tracers[i];
-                tr.alpha -= 0.15;
-
-                if (tr.alpha <= 0) {
-                    tracers.splice(i, 1);
-                    continue;
-                }
-
-                ctx.save();
-                ctx.globalAlpha = tr.alpha;
-                ctx.beginPath();
-                ctx.moveTo(tr.startX, tr.startY);
-                ctx.lineTo(tr.endX, tr.endY);
-                ctx.strokeStyle = '#ff0055';
-                ctx.lineWidth = 4;
-                ctx.shadowColor = '#ff0055';
-                ctx.shadowBlur = 12;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Crosshair (Punto blanco central exacto)
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, 4, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = '#ffffff';
-            ctx.shadowBlur = 8;
-            ctx.fill();
-            ctx.restore();
-
-            requestAnimationFrame(loop);
-        }
-    </script>
+function copyOut(){
+  const t = $('out');
+  if(!t.value){ setStatus('Nada que copiar.', 'err'); return; }
+  t.select();
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+  setStatus('📋 Copiado al portapapeles.', 'ok');
+}
+</script>
 </body>
 </html>
