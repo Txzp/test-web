@@ -51,17 +51,34 @@
   .status.ok{color:#00ff9d;border-color:#00ff9d33}
   .status.err{color:#ff5566;border-color:#ff556633}
   code{background:#000;padding:2px 6px;border-radius:3px;color:#ffcc00}
+  
+  .final-box{
+    margin-top:16px;background:#0a1a0a;border:1px solid #00ff9d33;
+    border-radius:8px;padding:14px;
+  }
+  .final-box label{color:#00ff9d}
+  .url-input{
+    background:#050505;color:#fff;border:1px solid #1a1a1a;
+    border-radius:6px;padding:10px;font-family:inherit;font-size:13px;
+    outline:none;width:100%;margin-bottom:10px;
+  }
+  .url-input:focus{border-color:#00ff9d}
+  .final-output{
+    background:#000;color:#00ff9d;border:1px solid #00ff9d33;
+    border-radius:6px;padding:12px;font-family:inherit;font-size:13px;
+    min-height:40px;word-break:break-all;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>xFuxk Obfuscator</h1>
-  <div class="sub">Pega tu código Lua → obtén un loadstring ofuscado (XOR + Base64). 100% cliente-side.</div>
+  <div class="sub">Ofusca tu script → súbelo a GitHub → obtén el loadstring final</div>
 
   <div class="opts">
-    <label><input type="checkbox" id="opt-junk" checked> Insertar código basura</label>
-    <label><input type="checkbox" id="opt-split" checked> Dividir el string en chunks</label>
-    <label><input type="checkbox" id="opt-alias" checked> Renombrar variables</label>
+    <label><input type="checkbox" id="opt-junk" checked> Código basura</label>
+    <label><input type="checkbox" id="opt-split" checked> Split chunks</label>
+    <label><input type="checkbox" id="opt-alias" checked> Renombrar vars</label>
   </div>
 
   <div class="row">
@@ -70,15 +87,23 @@
       <textarea id="src" placeholder="print('hello world')"></textarea>
     </div>
     <div class="box">
-      <label>Salida (loadstring ofuscado)</label>
+      <label>Script ofuscado (súbelo a GitHub)</label>
       <textarea id="out" class="out" placeholder="El resultado aparecerá aquí..." readonly></textarea>
     </div>
   </div>
 
   <div class="btns">
     <button onclick="doObf()">🔒 Obfuscate</button>
-    <button class="sec" onclick="copyOut()">📋 Copiar resultado</button>
-    <button class="sec" onclick="document.getElementById('src').value='';document.getElementById('out').value='';setStatus('')">🧹 Limpiar</button>
+    <button class="sec" onclick="copyOut()">📋 Copiar script</button>
+    <button class="sec" onclick="clearAll()">🧹 Limpiar</button>
+  </div>
+
+  <div class="final-box">
+    <label>Pega aquí la URL donde subiste el script ofuscado:</label>
+    <input type="text" id="url-input" class="url-input" placeholder="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/script.lua">
+    <button onclick="genLoadstring()">⚡ Generar Loadstring Final</button>
+    <div class="final-output" id="final-output">Esperando URL...</div>
+    <button class="sec" onclick="copyFinal()" style="margin-top:10px">📋 Copiar loadstring</button>
   </div>
 
   <div class="status" id="status">Listo.</div>
@@ -115,7 +140,6 @@ function xorEncode(str, key){
     const kb = key.charCodeAt(i % key.length);
     bytes.push(str.charCodeAt(i) ^ kb);
   }
-  // Convertimos bytes a string raw
   return String.fromCharCode.apply(null, bytes);
 }
 
@@ -139,7 +163,6 @@ function luaEscape(s){
 }
 
 function genJunk(){
-  // Genera variables basura que no afectan ejecución
   const lines=[];
   const n=3+Math.floor(Math.random()*3);
   for(let i=0;i<n;i++){
@@ -161,7 +184,6 @@ function doObf(){
     const xored = xorEncode(src, key);
     const b64 = b64enc(xored);
 
-    // Nombres
     const fnD   = optAlias ? randName(7) : 'd';
     const fnB   = optAlias ? randName(7) : 'decode';
     const vB64  = optAlias ? randName(7) : 'b64';
@@ -170,7 +192,6 @@ function doObf(){
     const vKey  = optAlias ? randName(7) : 'k';
     const vS    = optAlias ? randName(7) : 's';
 
-    // Construir string ofuscado (con o sin split)
     let dataLiteral;
     if(optSplit){
       const chunks = splitChunks(b64, 800);
@@ -179,7 +200,6 @@ function doObf(){
       dataLiteral = `"${luaEscape(b64)}"`;
     }
 
-    // Rutina de desobfuscación en Lua
     let routine = `local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"\n`;
     routine += `local function ${fnB}(${vS})\n`;
     routine += `  ${vS}=${vS}:gsub("=","")\n`;
@@ -226,10 +246,19 @@ function doObf(){
     output += `loadstring(${fnD}(${dataLiteral},${keyLiteral}))()`;
 
     $('out').value = output;
-    setStatus(`✅ Ofuscado (${output.length} chars). Key: ${key}`, 'ok');
+    setStatus(`✅ Ofuscado (${output.length} chars). Súbelo a GitHub y pega la URL abajo.`, 'ok');
   }catch(e){
     setStatus('Error: ' + e.message, 'err');
   }
+}
+
+function genLoadstring(){
+  const url = $('url-input').value.trim();
+  if(!url){ setStatus('Pega la URL del script ofuscado.', 'err'); return; }
+  
+  const loadstring = `loadstring(game:HttpGet('${url}'))()`;
+  $('final-output').textContent = loadstring;
+  setStatus('✅ Loadstring generado. Cópialo y úsalo en tu executor.', 'ok');
 }
 
 function copyOut(){
@@ -238,7 +267,29 @@ function copyOut(){
   t.select();
   document.execCommand('copy');
   window.getSelection().removeAllRanges();
-  setStatus('📋 Copiado al portapapeles.', 'ok');
+  setStatus('📋 Script ofuscado copiado.', 'ok');
+}
+
+function copyFinal(){
+  const t = $('final-output');
+  const text = t.textContent;
+  if(text === 'Esperando URL...'){ setStatus('Genera el loadstring primero.', 'err'); return; }
+  
+  const tempInput = document.createElement('input');
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+  setStatus('📋 Loadstring copiado al portapapeles.', 'ok');
+}
+
+function clearAll(){
+  $('src').value = '';
+  $('out').value = '';
+  $('url-input').value = '';
+  $('final-output').textContent = 'Esperando URL...';
+  setStatus('');
 }
 </script>
 </body>
